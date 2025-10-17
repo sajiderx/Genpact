@@ -1,0 +1,300 @@
+Current State (What They're Doing Now):
+- AE/SAE documents arrive in SharePoint folders regularly
+- Someone manually downloads documents from SharePoint
+- Manual upload to their prototype system
+- Prototype processes documents (likely basic extraction)
+- Manual review and data entry into final system
+
+PHASE 1: SHAREPOINT INTEGRATION (The Missing Piece)
+
+### Automated Document Ingestion:
+Option A: SharePoint Webhook + Azure Function (Recommended)
+
+SharePoint folder monitors for new files
+    ↓
+Webhook triggers when document added
+    ↓
+Azure Function picks up the document
+    ↓
+Copies to Azure Blob Storage
+    ↓
+Blob trigger starts processing pipeline
+
+
+
+Option B: Scheduled Polling
+
+Azure Function runs every 15/30/60 minutes
+    ↓
+Checks SharePoint folder for new documents
+    ↓
+Downloads new files to Blob Storage
+    ↓
+Marks as processed (flag/metadata)
+
+PHASE 2: DOCUMENT CLASSIFICATION
+Before Model A extraction, need to identify document type:
+AE/SAE Document Types (Common):
+
+- MedWatch Form FDA 3500
+- CIOMS (Council for International Organizations of Medical Sciences) forms
+- Company-specific AE forms
+- Safety narrative reports
+- Follow-up reports
+
+Classification Service:
+Document arrives → Quick scan (first page, form fields)
+                 → Identify document type
+                 → Route to appropriate extraction model
+                 → Apply type-specific schema
+
+PHASE 3: MODEL A - AE/SAE SPECIFIC EXTRACTION
+Key Fields to Extract from AE/SAE Documents:
+Patient Information:
+
+Patient Initials
+- Age/Date of Birth
+- Gender
+- Weight
+- Relevant medical history
+
+Event Details:
+- Event description
+- Event start date
+- Event end date
+- Outcome (recovered, fatal, ongoing, etc.)
+- Seriousness criteria (death, hospitalization, disability, etc.)
+
+Product Information:
+- Product name
+- Batch/Lot number
+- Dosage
+- Route of administration
+- Indication for use
+
+Reporter Information:
+- Reporter type (healthcare professional, consumer, etc.)
+- Reporter name/contact
+- Report date
+- Report source
+
+Regulatory Information:
+- Case number
+- Report type (initial, follow-up)
+- Regulatory classification
+
+Extraction Challenges for AE/SAE:
+
+Handwritten vs. Typed
+- Many AE forms are handwritten
+- Lower confidence scores
+- Need OCR + handwriting recognition
+
+Checkboxes and Radio Buttons
+- Form Recognizer can detect these
+- Need logic to map checked boxes to values
+
+Narrative Text Fields
+- Event descriptions are free text
+- Need NLP to extract key information
+- Sentiment analysis for severity indicators
+
+Multi-page Documents
+- AE reports can be 5-20 pages
+- Need to track field locations across pages
+- Continuation handling
+
+
+Data Quality Checks:
+Validation rules
+- Event start date cannot be in the future
+- Event end date must be >= start date
+- Age must be between 0-120
+- At least one seriousness criterion must be selected
+- Product name must match approved list
+- Case number format validation
+
+PHASE 5: SCHEMA SERVICE FOR AE/SAE
+AE/SAE Specific Schema:
+
+{
+  "schemaVersion": "2.0",
+  "documentType": "adverseEvent",
+  "regulatoryStandard": "FDA MedWatch",
+  
+  "requiredFields": [
+    "patientInitials",
+    "eventDescription",
+    "eventStartDate",
+    "productName",
+    "reportDate",
+    "reporterType"
+  ],
+  
+  "conditionalRequirements": {
+    "ifSerious": ["seriousnessCriteria", "outcome"],
+    "ifFatal": ["dateOfDeath", "autopsy"]
+  },
+  
+  "fields": {
+    "patientInitials": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,3}$",
+      "example": "JD"
+    },
+    "age": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 120
+    },
+    "eventStartDate": {
+      "type": "date",
+      "format": "ISO8601",
+      "maxDate": "today",
+      "requiredIfPresent": ["eventEndDate"]
+    },
+    "eventDescription": {
+      "type": "text",
+      "minLength": 10,
+      "maxLength": 5000,
+      "nlpRequired": true
+    },
+    "seriousnessCriteria": {
+      "type": "object",
+      "properties": {
+        "death": {"type": "boolean"},
+        "lifeThreatening": {"type": "boolean"},
+        "hospitalization": {"type": "boolean"},
+        "disability": {"type": "boolean"},
+        "congenitalAnomaly": {"type": "boolean"},
+        "otherSerious": {"type": "boolean"}
+      },
+      "validation": "atLeastOneTrue"
+    },
+    "outcome": {
+      "type": "enum",
+      "values": [
+        "RECOVERED",
+        "RECOVERING",
+        "NOT_RECOVERED",
+        "RECOVERED_WITH_SEQUELAE",
+        "FATAL",
+        "UNKNOWN"
+      ]
+    },
+    "productName": {
+      "type": "string",
+      "lookup": "approvedProductList",
+      "fuzzyMatch": true
+    }
+  },
+  
+  "businessRules": [
+    {
+      "rule": "eventEndDateAfterStartDate",
+      "condition": "eventEndDate >= eventStartDate",
+      "severity": "error"
+    },
+    {
+      "rule": "fatalOutcomeRequiresDeath",
+      "condition": "if outcome == FATAL then seriousnessCriteria.death == true",
+      "severity": "error"
+    },
+    {
+      "rule": "lowConfidenceNarrative",
+      "condition": "if eventDescription.confidence < 0.80 then flagForReview",
+      "severity": "warning"
+    }
+  ]
+}
+```
+
+---
+
+## **COMPLETE ARCHITECTURE DIAGRAM**
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        SHAREPOINT FOLDERS                        │
+│                    (AE/SAE Documents Arrive)                     │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+                    ┌────────▼────────┐
+                    │  SharePoint     │
+                    │  Webhook/       │
+                    │  Polling        │
+                    │  Service        │
+                    └────────┬────────┘
+                             │
+                    ┌────────▼────────┐
+                    │  Azure Blob     │
+                    │  Storage        │
+                    │  (Raw Docs)     │
+                    └────────┬────────┘
+                             │
+                    ┌────────▼────────┐
+                    │  Document       │
+                    │  Classification │
+                    │  Service        │
+                    └────────┬────────┘
+                             │
+                    ┌────────▼────────┐
+                    │   MODEL A       │
+                    │  Extraction     │
+                    │  Service        │
+                    │  ┌──────────┐   │
+                    │  │ Form     │   │
+                    │  │Recognizer│   │
+                    │  └──────────┘   │
+                    │  ┌──────────┐   │
+                    │  │   NLP    │   │
+                    │  │ Analysis │   │
+                    │  └──────────┘   │
+                    └────────┬────────┘
+                             │
+                    ┌────────▼────────┐
+                    │  Extraction     │
+                    │  Data Store     │
+                    └────────┬────────┘
+                             │
+                    ┌────────▼────────┐
+                    │   MODEL B       │
+                    │ Normalization   │
+                    │   Service       │
+                    │  ┌──────────┐   │
+                    │  │Data      │   │
+                    │  │Transform │   │
+                    │  └──────────┘   │
+                    │  ┌──────────┐   │
+                    │  │Medical   │   │
+                    │  │Coding    │   │
+                    │  └──────────┘   │
+                    └────────┬────────┘
+                             │
+                    ┌────────▼────────┐
+                    │  Central        │
+                    │  Schema         │
+                    │  Service        │
+                    │  (Validation)   │
+                    └────────┬────────┘
+                             │
+                    ┌────────▼────────┐
+                    │  Quality        │
+                    │  Check &        │
+                    │  Routing        │
+                    └─────┬─────┬─────┘
+                          │     │
+              ┌───────────┘     └───────────┐
+              │                             │
+    ┌─────────▼──────────┐      ┌──────────▼─────────┐
+    │  High Quality      │      │  Manual Review     │
+    │  Auto-Approved     │      │  Queue             │
+    │  (Confidence>95%)  │      │  (Confidence<95%)  │
+    └─────────┬──────────┘      └──────────┬─────────┘
+              │                             │
+              └───────────┬─────────────────┘
+                          │
+                ┌─────────▼──────────┐
+                │  Safety Database   │
+                │  or Downstream     │
+                │  System            │
+                └────────────────────┘
