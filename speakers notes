@@ -1,87 +1,44 @@
-Got it 👍 — since you’re still waiting for environment and data access from the Thermo Fisher team, this is the perfect time to define a structured “pre-access” milestone plan so that your leadership (Dip / Xponential) and the client both see steady progress.
-
-Below is a concise, actionable roadmap you can share in your next email or status update — covering next steps, milestones, and ownership while you wait for access.
-
-⸻
-
-🧭 AI-Powered AE/SAE Modernization – Next Steps & Milestones
+Position Audit: Current Status, Implementation RoadMap & Deliverable
 
 Current Status
-	•	✅ Proposal submitted and architecture defined (Azure-based AI pipeline).
-	•	⚙️ Awaiting Thermo Fisher’s sandbox / dataset access to initiate Model A (Azure Document Intelligence) setup.
-	•	📅 Target start: once credentials, sample PDFs, and schema definitions are shared.
+	•	Proposal submitted and architecture defined (Azure-based AI pipeline).
+	•	Awaiting Thermo Fisher’s sandbox / dataset access to initiate Model A (Azure Document Intelligence) setup.
+	•	Target start: once credentials, sample PDFs, and schema definitions are shared.
 
-⸻
 
-📍Phase 0 – Pre-Access Preparation (Week 0–2)
+IMPLEMENTATION ROADMAP
+Sprint 1-2 (Weeks 1-4): Foundation
+• Set up Azure infrastructure
+• Implement SharePoint → Blob Storage sync
+• Basic document classification
+• Simple extraction with Form Recognizer
+Deliverable: Documents automatically flow from SharePoint to Blob Storage and basic extraction works
 
-Goal: Build internal readiness and complete mock validation using synthetic AE/SAE data.
+Sprint 3-4 (Weeks 5-8): Model A Enhancement
+• Train custom Form Recognizer models for AE/SAE forms
+• Implement NLP for narrative text
+• Add checkbox/selection detection
+• Build confidence scoring logic
+Deliverable: Accurate extraction of all key fields from AE/SAE documents
 
-Task	Description	Owner
-0.1	Define target schema fields (AE_ID, EventTerm, Seriousness, Outcome, Drug, Reporter)	Sajid / Data Eng
-0.2	Mock AE/SAE document set (10–20 samples) for pipeline dry run	Xponential team
-0.3	Build Azure resource scaffolding (Functions, Blob, OpenAI, Cosmos DB)	Azure Admin / DE
-0.4	Create Schema Service baseline + /validate API	Sajid
-0.5	Draft prompt templates for Model B	Sajid / Dip review
+Sprint 5-6 (Weeks 9-12): Model B Implementation
+• Build normalization service
+• Implement medical coding integration (MedDRA)
+• Create data quality checks
+• Develop routing logic
+Deliverable: Normalized, validated data ready for downstream systems
 
-📈 Deliverable: “Internal Dry Run” results report using synthetic AE/SAE cases.
+Sprint 7-8 (Weeks 13-16): Schema Service & Integration
+• Build Central Schema Service
+• Create validation engine
+• Implement manual review queue
+• Build reporting dashboard
+Deliverable: End-to-end pipeline with quality gates
 
-⸻
+Sprint 9-10 (Weeks 17-20): Testing & Optimization
+• Load testing
+• Accuracy tuning
+• Performance optimization
+• User acceptance testing
+Deliverable: Production-ready system
 
-📍Phase 1 – Access & Environment Setup (Week 2–3)
-
-Goal: Establish secure connection and test AI pipeline with Thermo Fisher data.
-
-Task	Description	Owner
-1.1	Receive access credentials to Azure subscription / shared resource group	Thermo Fisher IT
-1.2	Upload 10 real AE/SAE case reports to Blob for baseline run	Client data team
-1.3	Validate environment (connectivity, permissions, Key Vault, API keys)	Sajid / Cloud Eng
-1.4	Conduct end-to-end test of Model A (Azure Document Intelligence extraction)	DE team
-1.5	Review extraction results & confidence thresholds	Sajid / Dip / Client QA
-
-📈 Deliverable: Verified extraction JSON + confidence dashboard for AE/SAE fields.
-
-⸻
-
-📍Phase 2 – Model Integration & Validation (Week 4–6)
-
-Goal: Integrate Model B (OpenAI normalization) and Schema Service validation.
-
-Task	Description	Owner
-2.1	Plug normalized Model B output into Schema Service /validate	DE team
-2.2	Perform schema validation and MedDRA term normalization	AI/DE team
-2.3	Route low-confidence cases to human-in-the-loop UI	Sajid / Frontend Dev
-2.4	Review accuracy metrics vs. manual baseline	Client QA
-2.5	Sign-off on Phase 2 results	Thermo Fisher PM
-
-📈 Deliverable: 90%+ accuracy achieved on AE/SAE schema validation.
-
-⸻
-
-📍Phase 3 – Pilot & Reporting (Week 7–8)
-
-Goal: Deliver working proof of concept and success metrics.
-
-Task	Description	Owner
-3.1	Process full pilot batch (50–100 AE/SAE reports)	DE team
-3.2	Generate performance report (time, cost, accuracy, compliance)	Sajid / Dip
-3.3	Present outcomes and next-phase roadmap	Xponential + Client Leadership
-
-📈 Deliverable: Final pilot report + presentation to Thermo Fisher AI Governance team.
-
-⸻
-
-🎯 Key Dependencies
-	•	Access to Thermo Fisher’s Azure environment (Blob + Document Intelligence endpoint)
-	•	Sample AE/SAE datasets for initial pipeline testing
-	•	Approval for OpenAI service integration (private endpoint or client-approved workspace)
-
-⸻
-
-📅 Summary Timeline
-
-Phase	Duration	Outcome
-Pre-Access Prep	2 weeks	Internal dry run complete
-Access Setup	1 week	Connection & initial extraction verified
-Model Integration	2 weeks	AI pipeline validated
-Pilot & Report	2 weeks	PoC results & client sign-off
