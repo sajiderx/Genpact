@@ -1,0 +1,98 @@
+CONVERSATIONAL SPEAKER NOTES: Document Classification
+Opening the Topic
+So one of the first things we need to talk about is document classification. Before we can extract data from these AE/SAE forms, we need to know what type of document we're dealing with - is it an FDA 3500, a CIOMS form, or one of your custom forms? Different forms have different fields and different validation rules, so getting this right upfront is really important.
+________________________________________
+The Hybrid Approach
+Here's what I'm thinking - we take a two-phase approach. Phase one gets us moving fast, and phase two gives us the production-quality solution.
+________________________________________
+PHASE 1: Rule-Based Classification (Quick Start)
+Explaining the Concept
+For the first couple weeks, I'd suggest we start with something really straightforward - just basic rule-based classification. Essentially, we grab the first page of the document, do a quick text scan, and look for key indicators.
+How It Works
+So for example, if we see 'MedWatch' or 'FDA 3500' anywhere on that first page, boom - we know it's an FDA form. If we see 'CIOMS', we know it's a CIOMS form. Pretty simple, right?
+Now, is this bulletproof? No. But here's the thing - it gets us up and running in like a week or two. We can prove out the entire pipeline, make sure all the pieces are talking to each other, and show value quickly. Then we upgrade to the more sophisticated approach.
+Benefits You're Highlighting
+The beauty of starting here is we're not stuck in 'analysis paralysis.' We're actually processing documents, learning what works and what doesn't, and building momentum. Plus, all the insights we gain from this simple version actually help us train the better model later.
+Being Honest About Limitations
+Now, full transparency - this isn't going to be perfect. If someone submits a form that doesn't have clear indicators on page one, we might misclassify it. That's why we'll flag anything where we're not confident and route it for a quick manual check.
+________________________________________
+PHASE 2: Azure Form Recognizer Classification (Production)
+Transitioning to AI
+Once we've got the pipeline working and we've collected some real-world examples from your actual document flow, we move to Azure Form Recognizer's built-in classification. This is Microsoft's AI service specifically designed for this exact problem.
+How It's Different
+Instead of just looking for keywords, this thing actually understands the structure and layout of the document. It's looking at where fields are positioned, how the form is laid out, the visual patterns - all of it. It's way more sophisticated.
+The Training Process
+Here's how we'd set this up: We take maybe 50-100 examples of each document type - FDA forms, CIOMS forms, your custom forms - and we upload them to Azure AI Studio. We label them, telling the system 'hey, this is what an FDA 3500 looks like.' Then Azure trains a custom model specifically for your documents.
+Production Benefits
+Once that model's trained, we're talking 90% plus accuracy, usually higher. It handles edge cases better, it's resilient to variations in how forms are filled out, and it gives us confidence scores so we know when to double-check something.
+Making It Real
+And this isn't some experimental thing - this is production-grade Microsoft Azure infrastructure. It's the same tech that banks and healthcare companies use to process millions of documents. It's battle-tested.
+________________________________________
+WHY THE HYBRID APPROACH MAKES SENSE
+Timeline Perspective
+So here's why I like this two-phase approach. If we tried to start with the AI model from day one, we'd spend weeks just collecting training data, labeling documents, testing accuracy - and meanwhile, nothing's moving. Your team is still doing manual uploads from SharePoint.
+But if we start with the simple rule-based version, we're processing real documents within two weeks. You're seeing value immediately. Then, while that's running, we're collecting the data we need to train the AI model properly.
+Risk Mitigation
+Plus, this approach de-risks the whole project. We validate the architecture early. If there are issues with how we're pulling from SharePoint or how we're storing results, we find out quickly - not three months in when we've already invested a ton in training ML models.
+Business Value
+From a business perspective, you're getting ROI faster. Even that simple rule-based classifier combined with automated extraction is going to save your team hours every day compared to manual data entry.
+________________________________________
+ADDRESSING POTENTIAL CONCERNS
+If They Ask: Why Not Just Start With AI?
+Great question. We absolutely could. The tradeoff is time and risk. Training a good classification model takes 4-6 weeks minimum - you need training data, labeling, iterations, validation. And if we discover we need to adjust our approach for some reason, we've already sunk all that time.
+The rule-based version? We can have it running in a week. It's not perfect, but it's good enough to validate everything else in the pipeline. Then we upgrade once we've proven the concept.
+If They Ask: How Accurate Is Rule-Based?
+Honestly? Probably 70-80% accurate, maybe better depending on how consistent your documents are. Which sounds low, but remember - anything it's not confident about gets flagged for quick review. So you're not getting bad data into your system.
+And realistically, when we move to the AI model, we'll get that up to 90-95%. But that 70-80% in phase one is plenty to prove value and get things moving.
+If They Ask About Maintenance
+The rule-based version? Yeah, if you get a new form type, someone's got to add the rules for it. It's maintenance overhead. But we're only using it for a couple months while we build out the AI model.
+The AI model is easier long-term. You just retrain it with examples of the new form type. No code changes needed.
+________________________________________
+TECHNICAL DETAILS (If They Want Them)
+Rule-Based Implementation
+Technically, the rule-based version is really simple. We're basically doing a text extraction on page one, running a regex pattern match looking for keywords, and returning a document type. We can build this in .NET in like a day or two.
+// Keep this ready if they want to see code
+*Something like this - we read the document, extract text from page one, check for patterns. Super straightforward.*
+AI Model Implementation
+For the AI version, we're using Azure Form Recognizer's classification API. We train the model in Azure AI Studio - which is basically a visual interface where you upload documents and label them - then we call that model from our .NET code.
+The nice thing is Azure handles all the heavy lifting. We don't have to manage ML infrastructure or worry about model updates. We just make API calls.
+________________________________________
+WHAT I NEED FROM YOU
+For Phase 1 (Now)
+To get phase one moving, I mainly need to understand your document types. Like, what are the typical forms you're processing? Are there 3 types, 5 types, 10 types? And are there clear indicators on each one that we can use for classification?
+If you have maybe 5-10 sample documents of each type, that'd be perfect. I can look at them and figure out the classification rules.
+For Phase 2 (Next Month)
+For the AI model, we'll need more - ideally 50-100 examples of each document type. But the good news is, by the time we're ready for that, your team will have been uploading documents through the system, so we'll have real examples to work with.
+________________________________________
+CLOSING THE TOPIC
+The Bottom Line
+So bottom line - we start simple and fast with rule-based classification, prove the whole system works end-to-end, then upgrade to the AI model for production. It's faster, lower risk, and you're seeing value within weeks instead of months.
+Next Steps
+If this approach makes sense to you guys, the next step on my end is to look at some sample documents and map out the classification rules. Should take me a day or two. Then we can start building.
+Setting Expectations
+Just want to set the right expectation - phase one is good enough to process documents and save your team time. Phase two is where we get to that 90-95% accuracy that makes this thing really hum. But both phases are valuable.
+________________________________________
+TRANSITION TO NEXT TOPIC
+Cool, so that's classification. Once we know what type of document we're dealing with, the next step is extraction - actually pulling out the data fields. That's where Model A comes in. Want to talk through that, or do you have questions on classification first?
+________________________________________
+KEY PHRASES TO USE
+When positioning the hybrid approach:
+•	Get moving fast, then upgrade
+•	Prove the concept, then optimize
+•	Show value early
+•	De-risk the project
+When discussing limitations:
+•	Full transparency...
+•	Not perfect, but good enough to...
+•	We'll flag anything we're not confident about
+When building confidence:
+•	Production-grade Microsoft infrastructure
+•	Battle-tested technology
+•	90-95% accuracy in production
+•	This is what banks and healthcare companies use
+When being consultative:
+•	Here's what I'm thinking...
+•	The tradeoff is...
+•	From a business perspective...
+•	What makes sense to you guys?
+
