@@ -1,0 +1,80 @@
+Here’s the updated email:
+
+-----
+
+**Subject:** Thermo Fisher Walkthrough Update - Oct 17
+
+Hi Frank,
+
+I wanted to give you a quick update on the code walkthrough call with Yash from Thermo Fisher this afternoon.
+
+**What We Learned:**
+
+Yash walked us through their current document processing system. They’ve built a working prototype that uses Azure Blob Storage as the document repository, with Databricks handling the ML-based extraction through an MLOps pipeline. The system is processing actual AE/SAE pharmacovigilance forms (MedWatch, CIOMS formats).
+
+**Key Takeaways:**
+
+1. **Current System:** They have a functional extraction pipeline, but there are gaps we can fill:
+
+- Manual document transfer from SharePoint to Blob Storage
+- No document classification layer
+- No data normalization or validation post-extraction
+- Limited exception handling and review workflow
+
+1. **The Challenge:** They’re dealing with multi-sponsor submissions, meaning the same form type (e.g., MedWatch 3500) comes in dozens of different formats from different pharma companies. This format variability is the core accuracy challenge - what we build needs to handle this chaos, not just clean templates.
+1. **Our Opportunity:** We can add significant value by building:
+
+- Automated SharePoint integration (eliminate manual uploads)
+- Document classification and intelligent routing
+- Model B normalization layer (standardize extracted data)
+- Schema validation service
+- Review queue UI for low-confidence extractions
+- End-to-end orchestration and error handling
+
+**Our Approach:**
+
+I’m recommending a hybrid strategy that enhances their existing Databricks investment rather than replacing it. We’ll add Azure Form Recognizer for structured field extraction where appropriate, build the missing normalization/validation layers, and create the UI for manual review. This respects their work while optimizing the overall solution.
+
+**Documentation Exchange:**
+
+Yash will be sharing their architectural diagrams and technical documentation with us. I plan to send him our proposed approach first, before reviewing their docs in detail. I want to make sure our recommendations come from an independent assessment rather than being overly influenced by their existing design choices. Once I receive their documentation, I’ll refine and adjust our approach accordingly to align with their architecture, address their specific concerns, and incorporate their recommendations. The goal is to bring fresh perspective while being thoughtful about what they’ve already built.
+
+**Access Update:**
+
+Yash confirmed that tickets for our Thermo Fisher email accounts and MFA were submitted, but our names aren’t showing up when he searches in Outlook yet. He said he’ll look into it. However, I got the sense that urgency is relatively low on their side - he mentioned we have “a few months” to get this done.
+
+**My Concern:**
+
+While I appreciate having adequate time, I’d prefer to design well and execute with a pass/fail fast mentality. We should set the pace and show rapid progress rather than drift into a slow-moving consulting engagement. Getting access sooner rather than later would help us:
+
+- Build in their actual environment (not just our parallel setup)
+- Process their real document samples
+- Demonstrate tangible value quickly
+- Establish momentum
+
+**Next Steps:**
+
+1. Send our proposed approach to Yash early next week
+1. Review their architectural documentation once received and refine our proposal
+1. Prepare a comprehensive presentation for the Oct 29 SOW meeting
+1. Follow up with Yash on the access issue
+1. Start building our parallel environment immediately (don’t wait for access)
+
+I’ll keep you posted on the access situation and send over the architecture proposal by end of week for your review before sharing with Thermo Fisher.
+
+Let me know if you have any questions or want to discuss the approach.
+
+Thanks,
+Sajid
+
+-----
+
+**Changes made:**
+
+- ✅ Added section about documentation exchange
+- ✅ Positioned your approach as independent but adaptable
+- ✅ Shows strategic thinking (fresh perspective while being respectful)
+- ✅ Makes it clear you’ll incorporate their feedback appropriately
+- ✅ Updated next steps to reflect the documentation exchange
+
+This shows Frank that you’re thinking strategically about how to position yourself as a consultant who brings value, not just someone who implements what the client already has in mind.​​​​​​​​​​​​​​​​
