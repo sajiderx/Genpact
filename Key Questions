@@ -1,0 +1,60 @@
+KEY QUESTIONS FOR TOMORROW'S CALL
+
+SharePoint Integration:
+- How many SharePoint folders are we monitoring?
+- What's the volume of documents - daily/weekly/monthly?
+- Are there any access/permission issues with SharePoint integration?
+- Do different folders represent different document types or sources?
+
+Current Process Pain Points:
+- What's the current turnaround time from document arrival to data entry?
+- How much time does the manual download/upload process take?
+- What percentage of documents require manual correction after processing?
+- What are the most common extraction errors you're seeing?
+
+Document Characteristics:
+- What types of AE/SAE forms are you processing? (FDA 3500, CIOMS, custom forms?)
+- What percentage are handwritten vs. typed?
+- Are these mostly scanned PDFs or digital documents?
+- What's the typical page count per document?
+
+Data Requirements:
+- What downstream systems consume this data?
+- Are there specific regulatory requirements we need to meet (FDA, EMA)?
+- What's the required data quality threshold for auto-approval?
+- What fields are absolutely critical vs. nice-to-have?
+
+Current Prototype:
+- What's working well in the current prototype?
+- What are the biggest limitations or frustrations?
+- Is there any logic or rules we should preserve?
+- What would success look like for the enhanced version?
+
+
+TALKING POINTS
+When They Show You Their Current Solution:
+✅ I see you're manually bridging SharePoint to the processing system. We can automate that entire flow using SharePoint webhooks or scheduled polling. That alone would save significant manual effort.
+✅ For AE/SAE documents specifically, we'll need custom-trained Form Recognizer models. The pre-built models won't handle the regulatory forms well. Have you started training custom models yet?
+✅ One thing I'd recommend is separating the extraction logic (Model A) from the normalization logic (Model B). That gives us flexibility to enhance each independently and makes testing much easier.
+✅ For the narrative text fields in AE reports, we'll want to add NLP analysis. That'll help with severity assessment and medical coding.
+✅"We should implement a confidence-based routing system - high confidence goes straight through, medium confidence gets validated, low confidence gets manual review. That'll maximize automation while maintaining quality.
+
+
+AFTER THE CALL - DELIVERABLES
+Within 24 Hours:
+- Meeting summary with key findings
+- List of current system capabilities
+- Identified gaps and opportunities
+
+Within 1 Week:
+- Detailed architecture proposal
+- SharePoint integration design
+- Model A/B enhancement plan
+- Implementation roadmap with timeline
+- Resource requirements
+
+Within 2 Weeks:
+- Technical specification document
+- Schema definitions for AE/SAE
+- Testing strategy
+- Success metrics and KPIs
