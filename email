@@ -1,80 +1,140 @@
-Here’s the updated email:
+RE: Discuss project/vendor management cadence
+Landis, Jim<jim.landis@thermofisher.com>
+​
+Sajid Inayat;​
+Chris Reda​
+​Walker, Neil <Neil.Walker@thermofisher.com>;​Shah, Yash <Yash.Shah@thermofisher.com>​
+CAUTION: This email originates from outside our organization. Be cautious with links, attachments, or requests for sensitive information. Verify the sender before taking action to ensure security!
 
------
+Hi Sajid,
 
-**Subject:** Thermo Fisher Walkthrough Update - Oct 17
+ 
 
-Hi Frank,
+Do you have any time on Monday after 2:30pm EDT to meet with me and Neil to see what’s going on with the resources that were sent onboarding emails?
 
-I wanted to give you a quick update on the code walkthrough call with Yash from Thermo Fisher this afternoon.
+ 
 
-**What We Learned:**
+Neil talked with Ahmet and there’s a problem that we need to get addressed. If Genpact is working on other TFS projects, there should be some knowledge there to help Ahmet.
 
-Yash walked us through their current document processing system. They’ve built a working prototype that uses Azure Blob Storage as the document repository, with Databricks handling the ML-based extraction through an MLOps pipeline. The system is processing actual AE/SAE pharmacovigilance forms (MedWatch, CIOMS formats).
-
-**Key Takeaways:**
-
-1. **Current System:** They have a functional extraction pipeline, but there are gaps we can fill:
-
-- Manual document transfer from SharePoint to Blob Storage
-- No document classification layer
-- No data normalization or validation post-extraction
-- Limited exception handling and review workflow
-
-1. **The Challenge:** They’re dealing with multi-sponsor submissions, meaning the same form type (e.g., MedWatch 3500) comes in dozens of different formats from different pharma companies. This format variability is the core accuracy challenge - what we build needs to handle this chaos, not just clean templates.
-1. **Our Opportunity:** We can add significant value by building:
-
-- Automated SharePoint integration (eliminate manual uploads)
-- Document classification and intelligent routing
-- Model B normalization layer (standardize extracted data)
-- Schema validation service
-- Review queue UI for low-confidence extractions
-- End-to-end orchestration and error handling
-
-**Our Approach:**
-
-I’m recommending a hybrid strategy that enhances their existing Databricks investment rather than replacing it. We’ll add Azure Form Recognizer for structured field extraction where appropriate, build the missing normalization/validation layers, and create the UI for manual review. This respects their work while optimizing the overall solution.
-
-**Documentation Exchange:**
-
-Yash will be sharing their architectural diagrams and technical documentation with us. I plan to send him our proposed approach first, before reviewing their docs in detail. I want to make sure our recommendations come from an independent assessment rather than being overly influenced by their existing design choices. Once I receive their documentation, I’ll refine and adjust our approach accordingly to align with their architecture, address their specific concerns, and incorporate their recommendations. The goal is to bring fresh perspective while being thoughtful about what they’ve already built.
-
-**Access Update:**
-
-Yash confirmed that tickets for our Thermo Fisher email accounts and MFA were submitted, but our names aren’t showing up when he searches in Outlook yet. He said he’ll look into it. However, I got the sense that urgency is relatively low on their side - he mentioned we have “a few months” to get this done.
-
-**My Concern:**
-
-While I appreciate having adequate time, I’d prefer to design well and execute with a pass/fail fast mentality. We should set the pace and show rapid progress rather than drift into a slow-moving consulting engagement. Getting access sooner rather than later would help us:
-
-- Build in their actual environment (not just our parallel setup)
-- Process their real document samples
-- Demonstrate tangible value quickly
-- Establish momentum
-
-**Next Steps:**
-
-1. Send our proposed approach to Yash early next week
-1. Review their architectural documentation once received and refine our proposal
-1. Prepare a comprehensive presentation for the Oct 29 SOW meeting
-1. Follow up with Yash on the access issue
-1. Start building our parallel environment immediately (don’t wait for access)
-
-I’ll keep you posted on the access situation and send over the architecture proposal by end of week for your review before sharing with Thermo Fisher.
-
-Let me know if you have any questions or want to discuss the approach.
+ 
 
 Thanks,
-Sajid
 
------
+Jim
 
-**Changes made:**
+ 
 
-- ✅ Added section about documentation exchange
-- ✅ Positioned your approach as independent but adaptable
-- ✅ Shows strategic thinking (fresh perspective while being respectful)
-- ✅ Makes it clear you’ll incorporate their feedback appropriately
-- ✅ Updated next steps to reflect the documentation exchange
+From: Sajid Inayat <sajid.inayat@xponentl.ai>
+Sent: Tuesday, October 14, 2025 4:58 PM
+To: Landis, Jim <jim.landis@thermofisher.com>; Chris Reda <chris.reda@xponentl.ai>
+Cc: Walker, Neil <Neil.Walker@thermofisher.com>; Shah, Yash <Yash.Shah@thermofisher.com>; Baumgartner, Richard <Richard.Baumgartner1@thermofisher.com>; Williams, Angela <Angela.Williams2@thermofisher.com>; Thevendrawakam, Kartik <kartik.thevendrawakam@thermofisher.com>
+Subject: Re: Discuss project/vendor management cadence
 
-This shows Frank that you’re thinking strategically about how to position yourself as a consultant who brings value, not just someone who implements what the client already has in mind.​​​​​​​​​​​​​​​​
+ 
+
+CAUTION: This email originated from outside of Thermo Fisher Scientific. If you believe it to be suspicious, report using the 'Report this email' button, which is displayed with a shield icon in Outlook, or send to SOC@thermofisher.com.
+
+ 
+
+Hi Jim,
+
+It works for me. Thanks for confirming the Oct 29 session for SOW management. We have a two-week window before that meeting, I’d like to make productive use of this time to ensure we’re fully ready when access is granted.
+
+Our plan is to:
+- Request/Gain access to Azure Non-prod environment to simulate the Document Intelligence workflow.
+- Finalize the Central Schema Service structure and validation logic.
+- Prepare synthetic AE/SAE samples to test Model A extraction and Model B normalization.
+- Document access dependencies for Blob storage, Form Recognizer endpoint, credentials for a smooth hand-off once Thermo Fisher provides the environment.
+
+This will allow us to hit the ground running as soon as access is approved. Please let me know if there’s any early environment or schema documentation we can review during this period.
+
+ 
+
+Regards
+
+SI
+
+ 
+
+From: Landis, Jim <jim.landis@thermofisher.com>
+Sent: Tuesday, October 14, 2025 4:30 PM
+To: Chris Reda <chris.reda@xponentl.ai>; Sajid Inayat <sajid.inayat@xponentl.ai>
+Cc: Walker, Neil <Neil.Walker@thermofisher.com>; Shah, Yash <Yash.Shah@thermofisher.com>; Baumgartner, Richard <Richard.Baumgartner1@thermofisher.com>; Williams, Angela <Angela.Williams2@thermofisher.com>; Thevendrawakam, Kartik <kartik.thevendrawakam@thermofisher.com>
+Subject: RE: Discuss project/vendor management cadence
+
+ 
+
+CAUTION: This email originates from outside our organization. Be cautious with links, attachments, or requests for sensitive information. Verify the sender before taking action to ensure security!
+
+ 
+
+Hi Chris and Sajid,
+
+ 
+
+Please let me know if your schedule is open for our Oct2025 SOW management meeting on 29Oct at 3pm EDT.
+
+ 
+
+I placed a hold on the TFS side for that time slot.
+
+ 
+
+Thanks!
+
+Jim
+
+ 
+
+ 
+
+-----Original Appointment-----
+From: Landis, Jim
+Sent: Friday, October 10, 2025 8:26 AM
+To: Landis, Jim; Shah, Yash; Walker, Neil; Chris Reda
+Cc: Sajid Inayat
+Subject: Discuss project/vendor management cadence
+When: Friday, October 10, 2025 1:00 PM-1:30 PM (UTC-05:00) Eastern Time (US & Canada).
+Where: Microsoft Teams Meeting
+
+ 
+
+Chris request we move to later
+
+ 
+
+Agree on a meeting cadence for Genpact and TFS Structured project resource manangement
+
+ 
+
+________________________________________________________________________________
+
+Microsoft Teams Need help?
+
+Join the meeting now
+
+Meeting ID: 222 602 642 173 1
+
+Passcode: cY2ii6NX
+
+Dial in by phone
+
++1 413-459-9664,,281485719# United States, Chicopee
+
+Find a local number
+
+Phone conference ID: 281 485 719#
+
+Join on a video conferencing device
+
+Tenant key: Pexipteams@video.thermofisher.net
+
+Video ID: 113 501 287 9
+
+More info
+
+For organizers: Meeting options | Reset dial-in PIN
+
+________________________________________________________________________________
+
+ 
