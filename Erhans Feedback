@@ -1,0 +1,171 @@
+last project with Canadian company, AI company running on .Net platform. 
+Able to describe last couple of projects with tech details so communication looks good with thicker accent.
+Shared a link (https://www.nuget.org/packages/CQRSDecorate.Net)
+
+1. ASP.NET Technology Stack Experience
+
+Question: You've worked with multiple ASP.NET technologies. Can you walk me through your experience with ASP.NET MVC vs ASP.NET Core, and explain a situation where you had to choose one over the other for a project?
+
+What to Listen For:
+- Understanding of MVC pattern and lifecycle
+- Knowledge of .NET Core advantages (cross-platform, performance, dependency injection)
+- Practical decision-making based on project requirements
+- Migration experience (.NET 6 to .NET 8 mentioned in CV)
+
+Erhan Response: 
+MVC is old, Core is better. Repo pattern changes were done. Added Index to run to increase performance. 
+
+2. Frontend Framework Depth - Angular
+
+Question: "I see you're currently working with Angular 19+. Can you describe how you structure a large-scale Angular application? Specifically, how do you handle state management, lazy loading, and component communication?"
+
+What to Listen For:
+- Angular architecture patterns (modules, standalone components)
+- State management approaches (Services, RxJS, NgRx if used)
+- Performance optimization techniques
+- Understanding of Angular lifecycle hooks and change detection
+
+Erhan Response:
+Lazy Loading is extraction of data out of table. Not good with Angular. He forgot the definitions. 
+
+3. JavaScript & TypeScript Proficiency
+
+Question: Given that strong JavaScript skills are critical for this role, can you explain the difference between 'var', 'let', and 'const'? Also, describe a complex JavaScript problem you've solved recently, particularly around asynchronous operations.
+
+What to Listen For:
+- Clear explanation of scope and hoisting
+- Promise/async-await understanding
+- Real-world examples from his projects
+- ES6+ features knowledge
+- TypeScript type safety benefits
+
+Erhan: Unable to respond 
+
+4. React & Next.js Experience
+
+Question: "You mentioned migrating Zubii ERP to ReactJS + Next.js. What drove that architectural decision, and what were the biggest challenges in that migration? How does your React approach differ from your Angular work?"
+
+What to Listen For:
+- Understanding of React hooks, component lifecycle
+- Next.js SSR/SSG knowledge
+- Framework comparison insights
+- Migration strategy and execution
+- Performance considerations
+
+Erhan:
+MVC migration, moved. React hooks are used for memory. 
+
+## 5. Web API & Backend Integration
+
+Question: "Describe how you structure communication between your frontend applications and .NET Core Web APIs. How do you handle authentication, error handling, and API versioning on the frontend?"
+
+What to Listen For:
+- RESTful API consumption patterns
+- HTTP interceptors/middleware understanding
+- JWT/OAuth implementation
+- Error boundary patterns
+- API client service architecture
+
+Erhan:
+Using RestAPI, JWT token. 
+
+## 6. CQRS & Mediator Pattern Frontend Implications
+
+Question: "You've implemented CQRS + Mediator patterns on the backend. How does this architectural pattern affect your frontend design? How do you structure your frontend services and data flow to work efficiently with CQRS?"
+
+What to Listen For:
+- Understanding of command vs query separation on frontend
+- State management alignment with CQRS
+- Real-time update handling (SignalR potential)
+- Form design and validation strategies
+- API contract understanding
+
+Erhan:
+Does not effect backend. Did one chat with SignalR. Used factory method for validation. 
+
+## 7. UI Component Libraries & Styling
+
+Question: "You've worked with Kendo UI, Bootstrap, and modern frameworks. For the Thermo Fisher project, how would you approach building a consistent, reusable component library? What's your strategy for styling and theming?"
+
+What to Listen For:
+- Component-driven development philosophy
+- CSS methodologies (BEM, CSS modules, styled-components)
+- Design system thinking
+- Accessibility considerations
+- Tailwind/utility-first CSS understanding (mentioned in CV context)
+
+Erhan response:
+CSS Modules
+Tailwind/utility-first CSS understanding (mentioned in CV context) - never heard of it
+
+
+
+## 8. Performance Optimization
+
+Question: "In your enterprise applications, what frontend performance bottlenecks have you encountered, and how did you resolve them? Can you give specific examples from your ERP or government portal projects?"
+
+What to Listen For:
+- Lazy loading implementation
+- Bundle size optimization
+- Virtual scrolling for large datasets
+- Caching strategies
+- Performance monitoring tools (Lighthouse, etc.)
+- Code splitting techniques
+
+Erhan:
+Usually, I do all the logic in backend. Just used front end to get data. Backend works better. 
+
+## 9. Microservices Frontend Architecture
+
+Question: "You've worked extensively with microservices. How do you structure frontend applications to consume multiple microservices? Have you worked with micro-frontends, and how do you handle cross-cutting concerns like authentication across services?"
+
+What to Listen For:
+- API gateway pattern understanding
+- Module federation (if applicable)
+- Shared authentication state
+- Service discovery on frontend
+- Error handling across services
+- Orchestration vs choreography understanding
+
+Erhan:
+Not a frontend guy. 
+
+## 10. Real-World Thermo Fisher Scenario
+
+Question: "Thermo Fisher needs a complex data entry form with real-time validation, dependent dropdowns, and the ability to save drafts. It needs to work across ASP.NET Core Web API backend. Walk me through how you'd architect and implement this feature from frontend perspective."
+
+What to Listen For:
+- Form management approach (Reactive forms in Angular, Formik in React)
+- Real-time validation strategy
+- State management for draft saving
+- API interaction patterns
+- Error handling and user feedback
+- Accessibility and UX considerations
+- Testing approach
+
+Erhan:
+If APi is ready then I call. 
+
+When I asked 
+
+## Bonus Red Flag Questions:
+
+### 11. Blazor Experience Check
+Question: "Have you worked with Blazor (Server or WebAssembly)? If not, how quickly could you adapt given your .NET and JavaScript background?"
+
+*Important if Thermo Fisher uses Blazor specifically*
+
+### 12. Legacy Code Handling
+Question: "If you encounter legacy ASP.NET Web Forms or Silverlight code that needs maintenance, what would be your approach?"
+
+*Tests adaptability to older tech stack if needed*
+
+
+
+## Evaluation Rubric:
+
+- Must Pass (8-10): Questions 1, 2, 3, 5, 10
+- Should Be Strong (6-10): Questions 4, 7, 8, 9
+- Nice to Have (4-10): Questions 6, 11, 12
+
+Overall Assessment: If Erhan scores 7+ on average across questions 1-10, he's a strong candidate for the role.
