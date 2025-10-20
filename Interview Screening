@@ -1,0 +1,188 @@
+Hi Erhan, thanks for taking the time today. I'm Sajid, leading technical delivery at Xponentl. How's your day going?
+
+Great. So before we dive into technical questions, let me give you context on who we are, what we're building, and what we're looking for. Then we can talk about your background and see if there's a fit. Sound good?
+
+WHO WE ARE
+Xponentl is an AI solutions company - recently acquired by Genpact. We build production systems for Fortune 500 companies, not just strategy documents. We're talking real code, real deployments, real production workloads.
+
+What's different about us: We work embedded with client teams. Modern tech stacks - .NET Core, Azure, microservices. And we move fast - weeks to working demo, not months of planning.
+
+THE PROJECT
+The client is Thermo Fisher Scientific - huge pharma company. We're working with their drug safety team. When someone has a bad reaction to a medication, there's a report filed - an adverse event form. These are regulatory documents that go to the FDA.
+Thermo Fisher already has a system using Azure and Databricks that extracts data from these forms with ML. But it has gaps - manual document transfers, no normalization, no validation, no UI for review.
+
+Our job: Build the complete platform around their extraction engine. Automated ingestion from SharePoint, classification, normalization, validation, quality scoring, and a full frontend for review workflows.
+
+The Technical Challenge:
+Here's what makes it interesting - these forms come from 50+ different pharmaceutical companies. Same form type, but wildly different layouts. Digital PDFs, scanned docs, even faxed handwritten forms. So you can't do template-based extraction - you need intelligent, format-agnostic processing.
+
+It's real distributed systems work - microservices, event-driven architecture, Azure Service Bus, proper error handling. Not simple CRUD.
+
+THE ROLE
+We need a senior .NET engineer who's also a technical leader. Not just taking tickets - you're architecting solutions, making technical decisions, mentoring others, owning significant pieces of the system, and talking directly with the client's technical team.
+
+Does that sound interesting, or are you more looking for pure coding without the leadership side?
+
+Tech Stack:
+
+.NET Core 8, microservices, CQRS + Mediator patterns, Azure (Functions, Service Bus, Blob Storage, Form Recognizer), Docker/Kubernetes, React or Angular frontend. Looking at your CV, you've done all of this - it's right in your wheelhouse."*
+
+
+Great. Let me ask you about your background and Let's start with your current work at PikaTek...
+
+
+Top 10 Technical Screening Questions for Erhan Krasniqi
+
+## 1. ASP.NET Technology Stack Experience
+
+Question: "You've worked with multiple ASP.NET technologies. Can you walk me through your experience with ASP.NET MVC vs ASP.NET Core, and explain a situation where you had to choose one over the other for a project?"
+
+What to Listen For:
+- Understanding of MVC pattern and lifecycle
+- Knowledge of .NET Core advantages (cross-platform, performance, dependency injection)
+- Practical decision-making based on project requirements
+- Migration experience (.NET 6 to .NET 8 mentioned in CV)
+
+
+
+## 2. Frontend Framework Depth - Angular
+
+Question: "I see you're currently working with Angular 19+. Can you describe how you structure a large-scale Angular application? Specifically, how do you handle state management, lazy loading, and component communication?"
+
+What to Listen For:
+- Angular architecture patterns (modules, standalone components)
+- State management approaches (Services, RxJS, NgRx if used)
+- Performance optimization techniques
+- Understanding of Angular lifecycle hooks and change detection
+
+
+
+## 3. JavaScript & TypeScript Proficiency
+
+Question: "Given that strong JavaScript skills are critical for this role, can you explain the difference between 'var', 'let', and 'const'? Also, describe a complex JavaScript problem you've solved recently, particularly around asynchronous operations."
+
+What to Listen For:
+- Clear explanation of scope and hoisting
+- Promise/async-await understanding
+- Real-world examples from his projects
+- ES6+ features knowledge
+- TypeScript type safety benefits
+
+
+
+## 4. React & Next.js Experience
+
+Question: "You mentioned migrating Zubii ERP to ReactJS + Next.js. What drove that architectural decision, and what were the biggest challenges in that migration? How does your React approach differ from your Angular work?"
+
+What to Listen For:
+- Understanding of React hooks, component lifecycle
+- Next.js SSR/SSG knowledge
+- Framework comparison insights
+- Migration strategy and execution
+- Performance considerations
+
+
+
+## 5. Web API & Backend Integration
+
+Question: "Describe how you structure communication between your frontend applications and .NET Core Web APIs. How do you handle authentication, error handling, and API versioning on the frontend?"
+
+What to Listen For:
+- RESTful API consumption patterns
+- HTTP interceptors/middleware understanding
+- JWT/OAuth implementation
+- Error boundary patterns
+- API client service architecture
+
+
+
+## 6. CQRS & Mediator Pattern Frontend Implications
+
+Question: "You've implemented CQRS + Mediator patterns on the backend. How does this architectural pattern affect your frontend design? How do you structure your frontend services and data flow to work efficiently with CQRS?"
+
+What to Listen For:
+- Understanding of command vs query separation on frontend
+- State management alignment with CQRS
+- Real-time update handling (SignalR potential)
+- Form design and validation strategies
+- API contract understanding
+
+
+
+## 7. UI Component Libraries & Styling
+
+Question: "You've worked with Kendo UI, Bootstrap, and modern frameworks. For the Thermo Fisher project, how would you approach building a consistent, reusable component library? What's your strategy for styling and theming?"
+
+What to Listen For:
+- Component-driven development philosophy
+- CSS methodologies (BEM, CSS modules, styled-components)
+- Design system thinking
+- Accessibility considerations
+- Tailwind/utility-first CSS understanding (mentioned in CV context)
+
+
+
+## 8. Performance Optimization
+
+Question: "In your enterprise applications, what frontend performance bottlenecks have you encountered, and how did you resolve them? Can you give specific examples from your ERP or government portal projects?"
+
+What to Listen For:
+- Lazy loading implementation
+- Bundle size optimization
+- Virtual scrolling for large datasets
+- Caching strategies
+- Performance monitoring tools (Lighthouse, etc.)
+- Code splitting techniques
+
+
+
+## 9. Microservices Frontend Architecture
+
+Question: "You've worked extensively with microservices. How do you structure frontend applications to consume multiple microservices? Have you worked with micro-frontends, and how do you handle cross-cutting concerns like authentication across services?"
+
+What to Listen For:
+- API gateway pattern understanding
+- Module federation (if applicable)
+- Shared authentication state
+- Service discovery on frontend
+- Error handling across services
+- Orchestration vs choreography understanding
+
+
+
+## 10. Real-World Thermo Fisher Scenario
+
+Question: "Thermo Fisher needs a complex data entry form with real-time validation, dependent dropdowns, and the ability to save drafts. It needs to work across ASP.NET Core Web API backend. Walk me through how you'd architect and implement this feature from frontend perspective."
+
+What to Listen For:
+- Form management approach (Reactive forms in Angular, Formik in React)
+- Real-time validation strategy
+- State management for draft saving
+- API interaction patterns
+- Error handling and user feedback
+- Accessibility and UX considerations
+- Testing approach
+
+
+
+## Bonus Red Flag Questions:
+
+### 11. Blazor Experience Check
+Question: "Have you worked with Blazor (Server or WebAssembly)? If not, how quickly could you adapt given your .NET and JavaScript background?"
+
+*Important if Thermo Fisher uses Blazor specifically*
+
+### 12. Legacy Code Handling
+Question: "If you encounter legacy ASP.NET Web Forms or Silverlight code that needs maintenance, what would be your approach?"
+
+*Tests adaptability to older tech stack if needed*
+
+
+
+## Evaluation Rubric:
+
+- Must Pass (8-10): Questions 1, 2, 3, 5, 10
+- Should Be Strong (6-10): Questions 4, 7, 8, 9
+- Nice to Have (4-10): Questions 6, 11, 12
+
+Overall Assessment: If Erhan scores 7+ on average across questions 1-10, he's a strong candidate for the role.
