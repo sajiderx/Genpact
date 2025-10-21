@@ -127,4 +127,80 @@ P.S. - I'm working on a better pre-screening checklist and frontend question ban
 
 
 
-Does this capture everything you need? Want me to adjust the tone to be more formal or more casual?
+Perfect — your draft already nails the structure and tone. Here’s how I’d **refine and shorten it** for two formats — one for **Teams/Slack** (human, concise, conversational) and one for **email** (slightly formal but still natural).
+
+---
+
+## 💬 **Teams/Slack Version (Conversational & Tight)**
+
+**Subject/Intro:** Quick correction on the Thermo Fisher frontend role
+
+Hey team,
+
+Looks like we’ve been sourcing the wrong “frontend” profile — the client needs **.NET frontend developers**, not Angular or React specialists.
+
+**What that means:**
+We’re looking for devs who build UIs **using C# and .NET**, not JavaScript frameworks.
+
+**What to look for:**
+
+* **Must-have:** Blazor, ASP.NET MVC (with Razor), SignalR
+* **Nice-to-have:** Angular/React (bonus only), Azure, CI/CD
+* **Primary language:** C#
+* **50%+ of work:** true UI development, not backend APIs
+
+**Search terms:** “Blazor developer”, “.NET full stack (frontend focus)”, “ASP.NET MVC developer”
+**Avoid:** pure Angular/React or backend-only profiles
+
+**Quick screen question:**
+*“Have you built user interfaces using Blazor or ASP.NET MVC?”*
+✅ Yes → good fit
+❌ No → pass
+
+We missed this nuance with Migen and Dinion — let’s correct that going forward.
+Ping me if you’d like to review profiles together.
+
+— Sajid
+
+---
+
+## 📧 **Email Version (Professional but Natural)**
+
+**Subject:** Updated Sourcing Criteria – Thermo Fisher Frontend Developer
+
+Hi Andre,
+
+Following Neil’s feedback, we’ve refined the profile to ensure we target the right type of frontend developer. The client is specifically looking for a **.NET frontend developer**, not a JavaScript-focused one.
+
+**Here’s the updated criteria for sourcing:**
+
+**Core Skills:**
+
+* Strong in **C# and .NET (Core/Framework)**
+* Experience with **ASP.NET MVC (Razor)** or **Blazor** for UI development
+* Familiarity with **SignalR** for real-time features
+* Comfortable integrating frontend components with .NET backends
+
+**Bonus Skills:**
+
+* Angular/React (helpful but not required)
+* Cloud experience (Azure/AWS)
+* CI/CD pipeline knowledge
+
+**Search terms to use:**
+“Blazor developer,” “.NET full stack (frontend),” “ASP.NET MVC developer”
+
+**Pre-screen question:**
+*“Have you built user interfaces using Blazor or ASP.NET MVC?”*
+If yes, proceed; if not, likely the wrong profile.
+
+Our last few candidates leaned more toward data analysis or backend work, so this should help narrow the focus.
+Let me know if you’d like to review or refine this further together.
+
+Best,
+**Sajid**
+
+---
+
+Would you like me to make a **third, pinned quick-reference version** (like a short table you can post in Teams for recruiters to keep handy)?
+
