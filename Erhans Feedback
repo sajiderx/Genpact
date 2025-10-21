@@ -1,264 +1,174 @@
-You should **do both** - send a conversational email with the form attached. Here's why:
-
-**Email = Context & Recommendation**  
-**Form = Formal Documentation**
-
-The email lets you be human and give perspective. The form is for HR records.
-
----
-
-## **CONVERSATIONAL EMAIL TO FRANK/CHRIS**
-
----
-
-**Subject:** Erhan Interview Debrief - Not Recommended
-
-Hi Frank (cc: Chris),
-
-Just finished the screening call with Erhan Krasniqi. Unfortunately, I don't think he's the right fit for the Thermo Fisher project. Let me walk you through what happened.
-
-**The Short Version:**
-
-Erhan has decent backend .NET experience, but his frontend skills are way weaker than his CV suggests. When I asked him about Angular (which he lists as "Angular 19+" on his resume), he couldn't explain basic concepts like lazy loading. When I asked about JavaScript fundamentals - literally var/let/const, entry-level stuff - he couldn't answer. And when I asked how he'd architect a complex form, his response was basically "if API is ready, I call it."
-
-Halfway through, when I asked about microservices frontend architecture, he just said **"I'm not a frontend guy."**
-
-That's a problem because we need someone who can build the entire review interface for Thermo Fisher - the document viewer, the editable forms, the validation, all of it. He can't do that.
-
-**The Backend Side:**
-
-On the .NET/backend stuff, he's okay but not great. He could probably handle building microservices and working with Azure, but even there, his answers were pretty surface-level. No depth, no real examples, just vague statements like "MVC is old, Core is better."
-
-**Resume vs Reality:**
-
-His CV says he's working with Angular 19+, React, Next.js - all this modern frontend stuff. But in the interview, he admitted he's "not good with Angular," forgot basic definitions, and never even heard of Tailwind CSS (which is everywhere now). There's a big disconnect between what's on paper and what he can actually do.
-
-**Why This Matters for Thermo Fisher:**
-
-We're building a full platform - backend services AND a complete frontend for document review. If we hire Erhan, we get maybe 50% of what we need, then we'd have to hire another person just for frontend. That doubles our cost and creates coordination headaches.
-
-Plus, he'd be on calls with Thermo Fisher's technical team. His communication wasn't terrible, but it wasn't sharp either. Thick accent, vague responses, couldn't articulate decisions clearly. I don't think he'd represent us well in those client discussions.
-
-**My Recommendation:**
-
-Pass on Erhan. Keep looking for someone who's genuinely full-stack - strong backend AND can actually build a modern UI. 
-
-I'm attaching the formal interview feedback form for your records.
-
-**What We Should Do Differently:**
-
-Going forward, I think we need to add a quick technical assessment before the interview - maybe a simple coding challenge or ask for GitHub repos. That would've caught this earlier and saved everyone time.
-
-Let me know if you want to discuss, but I'm pretty clear this isn't the right fit.
-
-Thanks,
-Sajid
-
----
-
-**Alternative (Slightly More Casual):**
-
----
-
-**Subject:** Erhan Interview - Not the One
-
-Hey Frank,
-
-Just wrapped up with Erhan. Not gonna work out for Thermo Fisher.
-
-**Quick Summary:**
-
-Guy's CV says he's a full-stack engineer with Angular and React experience. Reality? He's a backend developer who can't do frontend. Like, couldn't explain basic JavaScript (var vs let vs const), couldn't describe how lazy loading works in Angular, and when I asked about building a complex UI, he basically said "I just call the API."
-
-Then he straight up told me **"I'm not a frontend guy."** Well, we need a frontend guy. Or at least someone who can do both.
-
-Backend skills are okay - he knows .NET and REST APIs - but nothing special. Definitely not the senior/lead level we need. And his communication was pretty rough - vague answers, couldn't give real examples, thick accent made it harder.
-
-**The Problem:**
-
-His resume is inflated. Says "Angular 19+" as current work, but couldn't answer basic Angular questions. Says he migrated a system to "ReactJS + Next.js" but couldn't explain React hooks correctly. Either he's lying or he was barely involved in those frontend pieces.
-
-For Thermo Fisher, we need someone building microservices AND the review UI. He can maybe do half of that. If we hire him, we'd need to hire someone else for frontend, which defeats the purpose.
-
-**Recommendation:** Hard pass. Keep looking.
-
-Feedback form attached for the files.
-
-Let me know if you want to chat about it, but I'm pretty confident on this one.
-
-Sajid
-
----
-
-## **CONVERSATIONAL FEEDBACK FORM**
-
-Here's a more conversational version of the assessment form:
-
----
-
-**CANDIDATE SCREENING FEEDBACK**
-
-**Candidate:** Erhan Krasniqi  
-**Position:** Senior .NET Engineer / Technical Lead  
-**Interviewer:** Sajid Inayat  
-**Date:** [Date]  
-**Interview Duration:** ~60 minutes
-
----
-
-### **OVERALL RECOMMENDATION**
-
-☐ Strong Hire  
-☐ Hire  
-☐ Maybe / Need More Info  
-☑ **Pass**
-
----
-
-### **TECHNICAL ASSESSMENT**
-
-**Backend .NET Skills:** 6/10
-- Knows the basics of .NET Core, MVC, REST APIs, JWT
-- But answers were really surface-level
-- Couldn't articulate why you'd choose one approach over another
-- No real depth when explaining architecture decisions
-- Example: When asked about .NET Core vs MVC, just said "MVC is old, Core is better" - not helpful
-
-**Frontend Skills:** 2/10 ❌ **Major Problem**
-- CV says Angular 19+, React, Next.js experience
-- Reality: Couldn't answer basic questions
-- Failed to explain lazy loading (said it was "extraction of data out of table" - completely wrong)
-- Couldn't explain var/let/const in JavaScript (this is day-one stuff)
-- Said React hooks are "used for memory" (wrong - they're for state/lifecycle)
-- When asked about microservices frontend: **"I'm not a frontend guy"**
-- Never heard of Tailwind CSS
-
-**Communication:** 5/10
-- Understandable but thick accent
-- Vague, short answers
-- Couldn't provide detailed examples
-- Struggled to explain technical concepts clearly
-
----
-
-### **KEY STRENGTHS**
-
-1. Has actual .NET backend experience (not entry-level)
-2. Worked on large projects (ERPs, government portals)
-3. Knows REST APIs and basic authentication
-4. Created a NuGet package (shows some initiative): https://www.nuget.org/packages/CQRSDecorate.Net
-
----
-
-### **KEY CONCERNS**
-
-1. **Resume Inflation** - Big gap between CV and actual skills
-   - CV: "Angular 19+" as current work
-   - Reality: "Not good with Angular" and couldn't explain basics
-
-2. **Cannot Do Frontend** - Critical for our project
-   - Admitted "not a frontend guy"
-   - Can't build the UI we need for Thermo Fisher
-   - Would need to hire separate frontend developer
-
-3. **Lack of Technical Depth** - Even on backend
-   - Vague explanations
-   - No real examples or reasoning
-   - Couldn't walk through architectural decisions
-
-4. **Communication Gaps** - Risky for client-facing role
-   - Would struggle in technical discussions with Thermo Fisher
-   - Can't articulate solutions clearly
-   - Doesn't inspire confidence
-
----
-
-### **SPECIFIC INTERVIEW MOMENTS**
-
-**Good Moment:**
-- He shared a NuGet package he built for CQRS, which shows he's been thinking about patterns
-
-**Bad Moments:**
-- Asked about var/let/const: No response, couldn't answer
-- Asked about lazy loading: "Extraction of data out of table" (completely wrong definition)
-- Asked about complex form: "If API is ready then I call" (no actual architecture thinking)
-- Asked about frontend architecture: "Not a frontend guy" (disqualifying statement)
-
----
-
-### **FIT FOR THERMO FISHER PROJECT**
-
-**What We Need:**
-- ❌ Full-stack engineer (frontend + backend)
-- ❌ Build complex review interface with forms, validation, real-time updates
-- ❌ Technical leadership and client-facing discussions
-- ❌ Mentor other developers
-
-**What We'd Get:**
-- Marginal backend developer
-- Zero frontend capability
-- Questionable communication for client calls
-- Not a leader - can't explain decisions or mentor
-
-**Gap:** About 50-60% of what we actually need
-
----
-
-### **BOTTOM LINE**
-
-Erhan is a backend-focused .NET developer who has significantly inflated his frontend experience on his CV. He cannot deliver the frontend components we need for Thermo Fisher, and even his backend skills are just "okay" - not the senior/lead level we're looking for.
-
-If we hire him, we'd need to:
-1. Hire another person for frontend (doubles cost)
-2. Accept weaker technical leadership than we need
-3. Risk poor impression with client
-
-**Not worth it. Keep looking.**
-
----
-
-### **LESSONS LEARNED**
-
-For future candidates:
-1. Ask basic technical questions early (catches resume inflation)
-2. Require code samples or GitHub repos upfront
-3. When someone says "I'm not a [X] guy" for a required skill, believe them
-4. Don't assume CV accuracy - verify everything
-
----
-
-### **NEXT STEPS**
-
-- Continue candidate search
-- Focus on verified full-stack experience
-- Consider adding technical assessment before interview
-
----
-
-**Interviewer Signature:** Sajid Inayat  
-**Date:** [Date]
-
----
-
-## **WHICH APPROACH?**
-
-**My Recommendation:**
-
-Send the **slightly more casual email** (the second one) with the **conversational feedback form** attached.
-
-**Why:**
-- Frank knows you, so you can be more direct
-- Email gives him the "so what" quickly
-- Form provides documentation for HR/records
-- Conversational tone matches how you'd actually talk to him
-
-**Don't overthink it.** Frank just needs to know:
-1. Is this person good? **No.**
-2. Why not? **Can't do frontend, resume inflated.**
-3. What should we do? **Keep looking.**
-
-The email gives him that in 30 seconds. The form gives him details if he wants them.
-
----
-
-**Want me to adjust the tone or add anything?** 📧
+Sajid Inayat
+0 minutes 3 seconds0:03
+Sajid Inayat 0 minutes 3 seconds
+You're a large scale Angular application. How do you organize modules, components, services and routing?
+DS
+
+Dinion Svirca
+0 minutes 13 seconds0:13
+Dinion Svirca 0 minutes 13 seconds
+So basically it's not that I have too much experience regarding the Angular, but based on my TypeScript experience, which I'm working on Nets JS and Node JS, we start by first dividing the application into modules. I usually tend to decide.
+Dinion Svirca 0 minutes 32 seconds
+Decide on modules based on the type of work that they do. For example, when I've worked on a payment service, I could divide the application into refunds modules. I can go on and for example one time payments.
+Dinion Svirca 0 minutes 51 seconds
+I then can add another module regarding subscription and so on. Based on the routing part, I decide based on the module name, but first I have a main routing point which is usually the one that targets up.
+Dinion Svirca 1 minute 11 seconds
+And then based on the modules I go and fix all the routing parts. So that's what I would do based on my TypeScript experience.
+
+Sajid Inayat
+1 minute 21 seconds1:21
+Sajid Inayat 1 minute 21 seconds
+OK.
+Sajid Inayat 1 minute 25 seconds
+OK, let's switch gear to react. Explain use state, use effect, use contacts and use reducer. When would you use each?
+DS
+
+Dinion Svirca
+1 minute 38 seconds1:38
+Dinion Svirca 1 minute 38 seconds
+Actually I don't have any experience with React, so I don't know what to say regarding this one.
+
+Sajid Inayat
+1 minute 42 seconds1:42
+Sajid Inayat 1 minute 42 seconds
+OK, OK, OK, no problem. Anything on web socket integration?
+DS
+
+Dinion Svirca
+1 minute 51 seconds1:51
+Dinion Svirca 1 minute 51 seconds
+Yeah, I've in my experience, I mentioned earlier that I worked in a chat support system. We had to use Websockets in order to keep the communication alive between the client and the support that were working in our company. I used Signalr, which is a framework of.net that helps.
+DS
+Dinion Svirca
+9 minutes 17 seconds9:17
+Dinion Svirca 9 minutes 17 seconds
+Mhm.
+Dinion Svirca 9 minutes 28 seconds
+I'm not sure on this part because I I use that with the support of AI, so I cannot give you a proper answer on this one.
+
+Sajid Inayat
+9 minutes 35 seconds9:35
+Sajid Inayat 9 minutes 35 seconds
+OK, OK.
+Sajid Inayat 9 minutes 38 seconds
+No, no problem. So anything on real time updates from interface using web sockets, signal R, polling or something else? Do you have any insight into that?
+DS
+Dinion Svirca
+9 minutes 53 seconds9:53
+Dinion Svirca 9 minutes 53 seconds
+Yes, one proper example that I have based on my experience is updating for example chat status using that sockets once a new connection was made from the support.
+Dinion Svirca 10 minutes 11 seconds
+From the support site, for example, they logged in on their browser. We notified the client by changing the chat support status to available. What's more, we use Signalar on showing messages that the client or the support staff.
+10:24
+10 minutes 24 seconds
+Cool.
+DS
+Dinion Svirca
+10 minutes 31 seconds10:31
+Dinion Svirca 10 minutes 31 seconds
+Sent to each other. We did that by establishing a connection on sign lor which then opened the web socket and then we sent the messages through the web sockets that were available. I also implemented the priority based algorithm which was used.
+Dinion Svirca 10 minutes 50 seconds
+For example, we had different staff, support staff which was which were of different seniority, so we had to assign more complex chats to more senior staff.
+Dinion Svirca 11 minutes 8 seconds
+And we did that by first gathering some information on the client side, then we put them into some kind of queues and we would inform staff based on the queues that they had, they had.
+
+Sajid Inayat
+11 minutes 24 seconds11:24
+Sajid Inayat 11 minutes 24 seconds
+OK. OK. All right. So do you have any question for me, Daniel?
+DS
+Dinion Svirca
+11 minutes 30 seconds11:30
+Dinion Svirca 11 minutes 30 seconds
+I think you mentioned that you're going to work with Azure and Databricks, right?
+
+Sajid Inayat
+11 minutes 36 seconds11:36
+Sajid Inayat 11 minutes 36 seconds
+Yes, but that would be different team members. You might have you know some visibility into it and you might end up working with those guys. But what we are looking for is a front end heavy. So 70% of your work would be on front end and maybe 30% on the back end. So it won't.
+DS
+Dinion Svirca
+11 minutes 38 seconds11:38
+Dinion Svirca 11 minutes 38 seconds
+Or.
+Dinion Svirca 11 minutes 54 seconds
+Mm.
+
+Sajid Inayat
+11 minutes 56 seconds11:56
+Sajid Inayat 11 minutes 56 seconds
+Be like you are working on algorithms and things. It'll be front end work, yeah.
+DS
+Dinion Svirca
+12 minutes 1 second12:01
+Dinion Svirca 12 minutes 1 second
+Oh, so OK, now I got it. I think that it was vice versa, but OK, so the if the new hire comes, he will be working, he or she will be working with building a new platform for the existing one, like rewriting the entire.
+Dinion Svirca 12 minutes 21 seconds
+Flow. OK, what kind of databases do you use or you just?
+
+Sajid Inayat
+12 minutes 21 seconds12:21
+Sajid Inayat 12 minutes 21 seconds
+Yes, yes.
+Sajid Inayat 12 minutes 28 seconds
+It's mostly within Azure, but the front end would be Angular or React and most of that work would be through APIs and then there will be some other tech stack, so.
+DS
+Dinion Svirca
+12 minutes 33 seconds12:33
+Dinion Svirca 12 minutes 33 seconds
+Hmm.
+Dinion Svirca 12 minutes 36 seconds
+Mhm.
+
+Sajid Inayat
+12 minutes 44 seconds12:44
+Sajid Inayat 12 minutes 44 seconds
+As long so when you talk to a client, right, the first thing they'll ask, hey, how's your front end? What code you have written? What technology stack you work with, right? If you say that you are a back end guy, that's a deal breaker. They'll say oh.
+Sajid Inayat 13 minutes
+We are looking for front end, right? So even though there is some component for the back end like 30% but mostly it's front end, then it becomes difficult to justify with the client that OK, you know why do we have a back end expert working on front end?
+Sajid Inayat 13 minutes 18 seconds
+Deal, right. It becomes difficult to sustain unless you think you can handle it and you're willing to do that because you have to, even if you have a good understanding, you have to have a will to actually deliver on that, right? So.
+DS
+Dinion Svirca
+13 minutes 19 seconds13:19
+Dinion Svirca 13 minutes 19 seconds
+Yeah.
+Dinion Svirca 13 minutes 36 seconds
+Yeah, are you? I totally get what you're saying.
+
+Sajid Inayat
+13 minutes 38 seconds13:38
+Sajid Inayat 13 minutes 38 seconds
+So you tell me, would you be able to sustain and perform a 7030 ratio of front end versus back end? Is this something you want to do right?
+DS
+Dinion Svirca
+13 minutes 51 seconds13:51
+Dinion Svirca 13 minutes 51 seconds
+I actually will have to think about that because I will have to to 1st learn either Angular at a higher level level or start on a React from scratch. So having the responsibility of being a tech lead with my current knowledge and front end, I think that.
+Dinion Svirca 14 minutes 11 seconds
+I will have to work quite hard in order to achieve the level of performing that you're asking. So probably I will have to think about that, but I'm more of a back end guy, so that may be the deal breaker like you said.
+
+Sajid Inayat
+14 minutes 25 seconds14:25
+Sajid Inayat 14 minutes 25 seconds
+OK.
+Sajid Inayat 14 minutes 28 seconds
+OK. OK. I appreciate that. I know you're out of time, but it was nice talking to you. If I have any back end position come up and it will eventually, right, maybe new feature then I can always.
+Sajid Inayat 14 minutes 44 seconds
+Ask Andre to reach out to you.
+DS
+Dinion Svirca
+14 minutes 46 seconds14:46
+Dinion Svirca 14 minutes 46 seconds
+Sure, I would be. I would be honored to be conducted again and probably work with you guys.
+
+Sajid Inayat
+14 minutes 47 seconds14:47
+Sajid Inayat 14 minutes 47 seconds
+He will get back to you.
+Sajid Inayat 14 minutes 52 seconds
+Alright, cool. Thank you. Thanks.
+Sajid Inayat 14 minutes 56 seconds
+Take care. Bye.
+
+Sajid Inayat stopped transcription
