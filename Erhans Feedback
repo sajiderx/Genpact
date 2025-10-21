@@ -1,174 +1,130 @@
+# INTERVIEW FEEDBACK FORM - DINION SVIRCA
+
+
+
+Interviewer Name:  
 Sajid Inayat
-0 minutes 3 seconds0:03
-Sajid Inayat 0 minutes 3 seconds
-You're a large scale Angular application. How do you organize modules, components, services and routing?
-DS
 
+Candidate Name:  
 Dinion Svirca
-0 minutes 13 seconds0:13
-Dinion Svirca 0 minutes 13 seconds
-So basically it's not that I have too much experience regarding the Angular, but based on my TypeScript experience, which I'm working on Nets JS and Node JS, we start by first dividing the application into modules. I usually tend to decide.
-Dinion Svirca 0 minutes 32 seconds
-Decide on modules based on the type of work that they do. For example, when I've worked on a payment service, I could divide the application into refunds modules. I can go on and for example one time payments.
-Dinion Svirca 0 minutes 51 seconds
-I then can add another module regarding subscription and so on. Based on the routing part, I decide based on the module name, but first I have a main routing point which is usually the one that targets up.
-Dinion Svirca 1 minute 11 seconds
-And then based on the modules I go and fix all the routing parts. So that's what I would do based on my TypeScript experience.
 
-Sajid Inayat
-1 minute 21 seconds1:21
-Sajid Inayat 1 minute 21 seconds
-OK.
-Sajid Inayat 1 minute 25 seconds
-OK, let's switch gear to react. Explain use state, use effect, use contacts and use reducer. When would you use each?
-DS
+Candidates Email Address (on invite):  
+[Insert email]
 
-Dinion Svirca
-1 minute 38 seconds1:38
-Dinion Svirca 1 minute 38 seconds
-Actually I don't have any experience with React, so I don't know what to say regarding this one.
 
-Sajid Inayat
-1 minute 42 seconds1:42
-Sajid Inayat 1 minute 42 seconds
-OK, OK, OK, no problem. Anything on web socket integration?
-DS
 
-Dinion Svirca
-1 minute 51 seconds1:51
-Dinion Svirca 1 minute 51 seconds
-Yeah, I've in my experience, I mentioned earlier that I worked in a chat support system. We had to use Websockets in order to keep the communication alive between the client and the support that were working in our company. I used Signalr, which is a framework of.net that helps.
-DS
-Dinion Svirca
-9 minutes 17 seconds9:17
-Dinion Svirca 9 minutes 17 seconds
-Mhm.
-Dinion Svirca 9 minutes 28 seconds
-I'm not sure on this part because I I use that with the support of AI, so I cannot give you a proper answer on this one.
+Overall (Select one) ranking:
 
-Sajid Inayat
-9 minutes 35 seconds9:35
-Sajid Inayat 9 minutes 35 seconds
-OK, OK.
-Sajid Inayat 9 minutes 38 seconds
-No, no problem. So anything on real time updates from interface using web sockets, signal R, polling or something else? Do you have any insight into that?
-DS
-Dinion Svirca
-9 minutes 53 seconds9:53
-Dinion Svirca 9 minutes 53 seconds
-Yes, one proper example that I have based on my experience is updating for example chat status using that sockets once a new connection was made from the support.
-Dinion Svirca 10 minutes 11 seconds
-From the support site, for example, they logged in on their browser. We notified the client by changing the chat support status to available. What's more, we use Signalar on showing messages that the client or the support staff.
-10:24
-10 minutes 24 seconds
-Cool.
-DS
-Dinion Svirca
-10 minutes 31 seconds10:31
-Dinion Svirca 10 minutes 31 seconds
-Sent to each other. We did that by establishing a connection on sign lor which then opened the web socket and then we sent the messages through the web sockets that were available. I also implemented the priority based algorithm which was used.
-Dinion Svirca 10 minutes 50 seconds
-For example, we had different staff, support staff which was which were of different seniority, so we had to assign more complex chats to more senior staff.
-Dinion Svirca 11 minutes 8 seconds
-And we did that by first gathering some information on the client side, then we put them into some kind of queues and we would inform staff based on the queues that they had, they had.
+• Fail ✓
 
-Sajid Inayat
-11 minutes 24 seconds11:24
-Sajid Inayat 11 minutes 24 seconds
-OK. OK. All right. So do you have any question for me, Daniel?
-DS
-Dinion Svirca
-11 minutes 30 seconds11:30
-Dinion Svirca 11 minutes 30 seconds
-I think you mentioned that you're going to work with Azure and Databricks, right?
 
-Sajid Inayat
-11 minutes 36 seconds11:36
-Sajid Inayat 11 minutes 36 seconds
-Yes, but that would be different team members. You might have you know some visibility into it and you might end up working with those guys. But what we are looking for is a front end heavy. So 70% of your work would be on front end and maybe 30% on the back end. So it won't.
-DS
-Dinion Svirca
-11 minutes 38 seconds11:38
-Dinion Svirca 11 minutes 38 seconds
-Or.
-Dinion Svirca 11 minutes 54 seconds
-Mm.
 
-Sajid Inayat
-11 minutes 56 seconds11:56
-Sajid Inayat 11 minutes 56 seconds
-Be like you are working on algorithms and things. It'll be front end work, yeah.
-DS
-Dinion Svirca
-12 minutes 1 second12:01
-Dinion Svirca 12 minutes 1 second
-Oh, so OK, now I got it. I think that it was vice versa, but OK, so the if the new hire comes, he will be working, he or she will be working with building a new platform for the existing one, like rewriting the entire.
-Dinion Svirca 12 minutes 21 seconds
-Flow. OK, what kind of databases do you use or you just?
+2. Strengths in technical/functional skills, communication, or anything impressive.
 
-Sajid Inayat
-12 minutes 21 seconds12:21
-Sajid Inayat 12 minutes 21 seconds
-Yes, yes.
-Sajid Inayat 12 minutes 28 seconds
-It's mostly within Azure, but the front end would be Angular or React and most of that work would be through APIs and then there will be some other tech stack, so.
-DS
-Dinion Svirca
-12 minutes 33 seconds12:33
-Dinion Svirca 12 minutes 33 seconds
-Hmm.
-Dinion Svirca 12 minutes 36 seconds
-Mhm.
+Dinion was extremely honest and professional throughout the interview, which I really appreciated. He didn't try to BS his way through questions he didn't know - when I asked about React, he straight up said "I don't have experience with that" rather than trying to fake it. That kind of integrity is rare.
 
-Sajid Inayat
-12 minutes 44 seconds12:44
-Sajid Inayat 12 minutes 44 seconds
-As long so when you talk to a client, right, the first thing they'll ask, hey, how's your front end? What code you have written? What technology stack you work with, right? If you say that you are a back end guy, that's a deal breaker. They'll say oh.
-Sajid Inayat 13 minutes
-We are looking for front end, right? So even though there is some component for the back end like 30% but mostly it's front end, then it becomes difficult to justify with the client that OK, you know why do we have a back end expert working on front end?
-Sajid Inayat 13 minutes 18 seconds
-Deal, right. It becomes difficult to sustain unless you think you can handle it and you're willing to do that because you have to, even if you have a good understanding, you have to have a will to actually deliver on that, right? So.
-DS
-Dinion Svirca
-13 minutes 19 seconds13:19
-Dinion Svirca 13 minutes 19 seconds
-Yeah.
-Dinion Svirca 13 minutes 36 seconds
-Yeah, are you? I totally get what you're saying.
+On the backend side, he's clearly solid. He has good experience with .NET, Node.js, and TypeScript, and when he talked about the chat support system he built with priority-based routing for different staff levels, you could tell he thinks about business logic and real-world problems. His approach to organizing code by domain/feature (payments, refunds, subscriptions) shows he understands modular architecture conceptually.
 
-Sajid Inayat
-13 minutes 38 seconds13:38
-Sajid Inayat 13 minutes 38 seconds
-So you tell me, would you be able to sustain and perform a 7030 ratio of front end versus back end? Is this something you want to do right?
-DS
-Dinion Svirca
-13 minutes 51 seconds13:51
-Dinion Svirca 13 minutes 51 seconds
-I actually will have to think about that because I will have to to 1st learn either Angular at a higher level level or start on a React from scratch. So having the responsibility of being a tech lead with my current knowledge and front end, I think that.
-Dinion Svirca 14 minutes 11 seconds
-I will have to work quite hard in order to achieve the level of performing that you're asking. So probably I will have to think about that, but I'm more of a back end guy, so that may be the deal breaker like you said.
+Communication-wise, he was clear and articulate. No rambling, no defensiveness. When it became obvious this wasn't the right fit, he handled it maturely and didn't waste anyone's time. He'd be a pleasure to work with on the right project.
 
-Sajid Inayat
-14 minutes 25 seconds14:25
-Sajid Inayat 14 minutes 25 seconds
-OK.
-Sajid Inayat 14 minutes 28 seconds
-OK. OK. I appreciate that. I know you're out of time, but it was nice talking to you. If I have any back end position come up and it will eventually, right, maybe new feature then I can always.
-Sajid Inayat 14 minutes 44 seconds
-Ask Andre to reach out to you.
-DS
-Dinion Svirca
-14 minutes 46 seconds14:46
-Dinion Svirca 14 minutes 46 seconds
-Sure, I would be. I would be honored to be conducted again and probably work with you guys.
 
-Sajid Inayat
-14 minutes 47 seconds14:47
-Sajid Inayat 14 minutes 47 seconds
-He will get back to you.
-Sajid Inayat 14 minutes 52 seconds
-Alright, cool. Thank you. Thanks.
-Sajid Inayat 14 minutes 56 seconds
-Take care. Bye.
-
-Sajid Inayat stopped transcription
+
+3. Gaps in skills, fit, or anything we should keep in mind.
+
+Here's the issue - this is a fundamental mismatch. We need a frontend-heavy Tech Lead (70% frontend, 30% backend), and Dinion is a backend developer who describes himself as "more of a back end guy."
+
+His frontend experience is pretty limited:
+- Angular: He admitted upfront "I don't have too much experience with Angular." His answers were surface-level - he could talk about organizing modules by feature, but didn't mention anything about lazy loading, shared modules, RxJS, change detection, or any of the deeper Angular concepts a Tech Lead would need to know.
+
+- React: Zero experience. Just flat out said he's never used it.
+
+- Tech Lead readiness: He'd need to "learn Angular at a higher level or start React from scratch" (his words). A Tech Lead needs to be an expert who can mentor others, not someone learning the tech stack.
+
+There was also a concerning moment where he talked about implementing WebSocket features "with the support of AI" and then admitted "I cannot give you a proper answer on this one." For a Tech Lead role, we need someone who deeply understands what they're building, not someone copying AI-generated code without full comprehension.
+
+Bottom line: He's a mid-level backend developer being considered for a senior frontend leadership role. Wrong specialization entirely.
+
+
+
+4. Would this candidate align well with our team and work environment?
+
+If we had a backend-focused role, absolutely yes. Dinion seems like he'd be a great team player - honest, professional, good communicator, and he has that self-awareness to know when something isn't the right fit.
+
+But for this specific role? No. The client expects a frontend expert from day one. We can't justify putting a backend developer who needs to learn the tech stack into a Tech Lead position. It would set him up to fail and disappoint the client. Even if he worked really hard to ramp up (which he acknowledged he'd need to do), we're talking 6-12 months before he'd be productive at the level required. That's not fair to anyone.
+
+His attitude and work ethic seem solid, but the skills gap is just too wide for this particular opportunity.
+
+
+
+5. Anything the next interviewer should explore deeper in the next round?
+
+There shouldn't be a next round for this position. This is a hard pass.
+
+However, keep Dinion warm for backend opportunities. When we have .NET, Node.js, or backend-heavy full-stack roles (like 70% backend, 30% frontend), he'd be worth considering. At that point, we'd want to dig deeper into:
+
+- His .NET architecture experience (CQRS, microservices, design patterns)
+- API design and development
+- Database optimization and query performance
+- His experience leading backend projects or mentoring junior developers
+- Real examples of complex backend problems he's solved (without AI assistance)
+
+For now though, we need to go back to the drawing board and find someone with actual frontend depth for Thermo Fisher.
+
+
+
+
+
+# EMAIL SUMMARY TO RECRUITER
+
+
+
+Subject: Dinion Svirca Interview Feedback - Not Recommended for Frontend Tech Lead
+
+Hi [Recruiter Name],
+
+Just wrapped up the interview with Dinion Svirca for the Thermo Fisher Frontend Tech Lead position. Unfortunately, this isn't the right fit.
+
+Quick Summary:
+
+Overall Rating: Fail (for this specific role)
+
+The Core Issue:  
+Dinion is a backend developer applying for a frontend-heavy (70%) Tech Lead role. It's a fundamental specialization mismatch.
+
+What We Found:
+- Limited Angular experience - he admitted upfront "I don't have too much experience with Angular" and his answers were pretty surface-level
+- Zero React experience - when I asked about React hooks, he said he's never used React
+- Not Tech Lead ready for frontend - he acknowledged he'd need to "learn Angular at a higher level or start React from scratch"
+- AI dependency concern - mentioned using AI to implement WebSocket features and couldn't explain it independently
+
+The Good News:
+Dinion was incredibly honest and professional. He didn't try to oversell himself, and when it became clear this wasn't the right match, he handled it maturely. He's got solid backend experience (.NET, Node.js, TypeScript) and would absolutely be worth considering for backend-focused roles when they come up.
+
+His Own Words:  
+"I'm more of a back end guy, so that may be the deal breaker like you said."
+
+He self-selected out, which honestly saved us all time.
+
+Bottom Line:  
+We're trying to fit a square peg in a round hole here. The client needs a frontend expert who can lead from day one. Dinion would need 6+ months just to get up to speed on the tech stack before he could even think about leading others. That's not viable.
+
+Next Steps:
+- Do not move forward for Thermo Fisher Frontend Tech Lead
+- Keep in pipeline for backend .NET or Node.js roles
+- Tag his profile as "Backend Developer - Mid/Senior Level"
+
+Process Improvement:  
+Can we add a pre-screen question about frontend vs backend specialization percentage? Would help avoid these mismatches before we get to technical interviews. Maybe require GitHub/portfolio links upfront for frontend roles?
+
+Let me know when backend positions open up - Dinion would be a solid candidate for those.
+
+Thanks,  
+Sajid
+
+
+
+P.S. - I'm working on a better pre-screening checklist and frontend question bank so we can catch these mismatches earlier. Will share with the team soon.
+
+
+
+Does this capture everything you need? Want me to adjust the tone to be more formal or more casual?
