@@ -1,213 +1,160 @@
-Transcript
-October 28, 2025, 5:26PM
+Perfect — below is the **final polished version** of every slide, including updated **text** and **speaker notes** you can directly copy-paste into your PowerPoint (“TFS-SE-ASE Pipeline Modernization v3”).
+Each section is labeled by slide number for easy editing in sequence.
 
-Inayat, Sajid started transcription
+---
 
-Bucko, Ahmet   0:05
-70% or more the AI share about it.
+## 🧱 **Slide 1 – Current State**
 
-Peti, Helios   0:09
-OK, OK, I understand.
+**Slide Text Update**
+**Background**
 
-Inayat, Sajid   0:09
-So question for you, this e-mail that you have shown on this web page, right? It came into Outlook, right? From Outlook to this page, how did it get transmitted?
+* Case reports arrive via email → picked up by an automated listener service → attachments sent via internal API for processing
+* Mix of structured PDFs, faxes, and handwritten forms
+* Some form types (MedWatch 3500) appear in multiple sponsor-specific layouts
+* Databricks prototype extracts and transforms using ML models
+* Azure Blob used as repository; lacks normalization and review UI
 
-Bucko, Ahmet   0:18
-Yes.
-Yeah, basically they have a service which waits for the for an e-mail to come and when that e-mail comes they read the attachment and that attachment is being sent on the web service and that web service pulls data.
+**Core Problem & Opportunity**
 
-Peti, Helios   0:24
-I think.
+* Variable formats → need context-aware extraction (Azure Document Intelligence)
+* Manual verification → human-in-loop review
+* No normalization → add schema and validation layers
+* Siloed processing → unify Azure orchestration (ADF, Databricks, DI)
+* Limited learning → enable continuous model retraining
 
-Inayat, Sajid   0:32
-OK, I see.
-I see.
-Hmm.
+**Speaker Notes**
 
-Bucko, Ahmet   0:42
-Like does the data extraction and sends it to an AI service. So basically this AI service asks some questions and returns the predefined Jason with file. So and then this Jason gets saved to a database and then you get inside like manually.
+> The current process is semi-automated. Emails are received through Outlook, and a listener service forwards attachments to an internal API that handles extraction. SharePoint is no longer central—it’s used occasionally for manual uploads. Databricks prototypes the ML-based extraction and saves results in Blob. However, the flow lacks normalization, validation, and a unified review experience, which makes QA and audit difficult.
 
-Inayat, Sajid   0:53
-Oh.
+---
 
-Bucko, Ahmet   1:01
-And you fill out the data, you know like now here you can see like for this red one, the user is not the AI was not sure you know they have more than 50% of success rate.
-Less than 50%. This one is above 70%. Like we are sure that more than 70% AI was sure that they are it is 5858 years old and then the user puts it, saves it the data.
-And then the user puts it, saves it the data.
-Then they validate. They have some predefined validations put in place and then the manual review where everything gets passed when passed through submit. Basically this submit generates an XML response, an XML file.
+## 🌐 **Slide 2 – Future State: Azure-Native Intelligent Pipeline**
 
-Peti, Helios   1:45
-Oh.
+**Slide Text Update**
+**Future-State Vision: Azure-Native Intelligent Pipeline**
 
-Bucko, Ahmet   1:50
-Which sends out to a different system, which now they open and review it again. But here our work is done, Mike. Yep, we deal with you.
+* **Ingestion:** Outlook → Graph API → Azure Function → Blob (no SharePoint dependency)
+* **Extraction:** Azure Document Intelligence (custom model) using Layout & Read APIs
+* **Validation:** Schema-based normalization, data quality checks, human-in-loop review for <70 % confidence
+* **Publishing:** JSON output with audit trail; XML transformation handled downstream
+* **Security:** Azure Key Vault + Managed Identity for credential rotation
 
-Peti, Helios   2:00
-I have I I have a question. OK, so First thing first, I think we use Ms. Graph right to get the e-mail connection.
+**Modernization Approach**
 
-Bucko, Ahmet   2:05
-Yes.
-I'm not sure that. Yeah, basically the developer guys doesn't know it's like really there is a web app and they know AI. There is an AI functionality. Yep, and they got a JSON response. What happens to that AI?
+* **Enhance & Integrate (Preferred):** Retain Databricks ingestion, integrate Document Intelligence + review UI
+* **Targeted Rewrite (Fallback):** If >20 % refactor required, rebuild brittle logic
+* **MVP Success Target:** 85–90 % field-level extraction accuracy by January (Phase 1 validation goal)
 
-Peti, Helios   2:15
-It's OK, yeah, yeah.
-OK, it's OK. So basically.
-OK.
-I just.
+**Speaker Notes**
 
-Bucko, Ahmet   2:29
-Service. You know they are not sure. I asked them. Do you do any embedding? How do you how do you pull out data? Yep, they were not aware.
+> The future state replaces manual and SharePoint-dependent ingestion with a fully automated Azure Function triggered by Graph API. Each email attachment is securely written to Blob and processed by Azure Document Intelligence. A custom model handles both structured and unstructured forms, scoring confidence for each extracted field. Data below the confidence threshold is routed to a human-in-loop UI. The validated JSON is schema-checked and passed downstream, where another team manages XML conversion and regulatory submission. Security and key management are centralized in Azure Key Vault.
 
-Peti, Helios   2:34
-OK.
-Also say one one thing we should keep in mind here that we didn't know. So if we do the extraction and we validated via Shima this extraction then we'll go to the to the other which will create the XML.
-Version of our schema. So will we do also the the I would say the the parsing from the Jason to XML based on the XML fields that they require or will it be done by the other team?
-So are we only doing the extraction and saving to Jason and then they can handle the other XML schema to do the parsing OK?
+---
 
-Bucko, Ahmet   3:20
-Basically they need the manual intervention at the moment. This is, yeah, basically they have a lot of code in here, you know. So basically, Yep, that part, whenever you feel that Jason, Yep, you will do it. The AI part will do it. But then the XML part and stuff, it will be done by our like our system here.
+## 🚀 **Slide 3 – Migration Phases & Timeline**
 
-Peti, Helios   3:32
-Yeah, yeah.
-OK, OK. So basically we are on me and said we're only going to take part of the extraction thing using Azure document intelligence, using both another lamp to improve the enhancement parts validating via Shima and just sending you guys back to Jason in the front end and then.
-You guys move on from there, right?
+**Slide Text Update**
+**Phase 1 (Now – Dec): MVP Build & Validation**
 
-Bucko, Ahmet   3:58
-Yes, yes, basically they have a way like you update stuff, save them.
+* Implement Graph API-based ingestion
+* Replace Textract with Azure Document Intelligence
+* Enable schema validation + confidence routing
 
-Peti, Helios   3:59
-OK.
+**Phase 2 (Jan – Feb): Scale & Optimize**
 
-Bucko, Ahmet   4:05
-And yeah, but this is it. Submit and.
+* Add multi-region reliability and monitoring
+* Refine custom model and review UI
 
-Peti, Helios   4:09
-Yeah, I I understand. I can see.
-OK.
+**Phase 3 (Mar +): Production & Continuous Learning**
 
-Inayat, Sajid   4:24
-And from a performance perspective, is taking, um, how many seconds?
+* Implement model retraining cadence
+* Enable automated drift detection
 
-Peti, Helios   4:34
-I think it depends also on the PDF file. How big is it is I will assume right?
+**MVP live by Dec 2025 | Production-ready by Mar 2026**
 
-Inayat, Sajid   4:39
-Mm.
-Oh.
+**Speaker Notes**
 
-Peti, Helios   4:45
-Because if the PDF is, let's say 5 megabytes, I think it will take more than like the PDF was just like 200 kilobytes, right?
+> Phase 1 establishes automated email ingestion through Graph API, Azure Functions, and the initial custom Document Intelligence model. Phase 2 focuses on reliability and scale—adding multi-region support and enhanced monitoring. From March onward, the focus shifts to continuous improvement and retraining for long-term resilience.
 
-Bucko, Ahmet   4:50
-Yeah. Can you hear me guys now? Yep.
+---
 
-Inayat, Sajid   4:51
-Yeah. And we probably have. Yeah. No, no, we can hear you.
+## ⚙️ **Slide 4 – Risk & Mitigation Plan**
 
-Peti, Helios   4:54
-Yeah.
+**Slide Text Update**
+**Model Accuracy**
 
-Bucko, Ahmet   4:54
-Yep, my Internet went down. Sorry.
+* Incremental training, fallback extraction
 
-Inayat, Sajid   4:58
-Yeah. So I think we were discussing that the performance is dependent on how big the PDF or image could be and depending on how many pages you have to process, it will take longer than expected, right? But there might be a way to actually identify typically, let's say.
+**Azure Throttling / Failures**
 
-Bucko, Ahmet   5:13
-Yes.
+* Multi-region deployment, retries, idempotent logic
 
-Inayat, Sajid   5:18
-3% of the time they get 5 pages in a PDF. For example, there has to be some sort of pattern, right? Typical PDF contains how many pages? I'm sure they probably have some some stats there.
+**Schema or Downstream Drift**
 
-Bucko, Ahmet   5:29
-We we touched it also, yes.
+* Early alignment with downstream XML team, define interface contracts
 
-Inayat, Sajid   5:35
-Hmm.
+**File Size / Performance Variance**
 
-Bucko, Ahmet   5:36
-Yes. And basically they have from one page to 55 pages, Yep.
+* Async processing and queue-based scaling for large PDFs
 
-Inayat, Sajid   5:39
-55 pages, but there's no percentage associated how the volume looks like day in a life scenario.
+**Team Enablement**
 
-Bucko, Ahmet   5:41
-Yes.
-No. Yeah, basically like from a single source, you know, let's say from Pfizer, you know they will get known, known.
-PDF file like like we have, the format would be the same, you know, and from another pharma company, yeah, basically they're going to have the same, the same page layout of the PDF.
+* FastTrack training (Azure Functions, DI)
 
-Peti, Helios   6:03
-Oh.
+**Timeline Pressure**
 
-Bucko, Ahmet   6:14
-And yeah, but they want to build something for those, like for those known company that they're receiving events from.
+* MVP early, validate fast, scale iteratively
 
-Inayat, Sajid   6:14
-OK.
-Oh.
+**Speaker Notes**
 
-Bucko, Ahmet   6:22
-Uh, basically they want to have something like, you know, like really good parser there.
+> Major risks include model accuracy drift, schema misalignment with the downstream XML generator, and performance variance for large multi-page PDFs. We mitigate these through incremental model training, schema contracts, retry logic, and queue-based asynchronous processing. FastTrack support ensures the team is ready, and our MVP-first strategy keeps delivery momentum.
 
-Inayat, Sajid   6:28
-Yeah, we'll have to, yeah, we were thinking to actually use the document intelligence. So we'll we'll use inbuilt capability, but we'll probably use the custom model in DI on Azure side. We are going to move away from tech select actually.
+---
 
-Bucko, Ahmet   6:29
-And maybe.
+## ❓ **Slide 5 – Open Questions / Dependencies**
 
-Inayat, Sajid   6:46
-That's the thought process. We'll we'll work with Yashan team to, you know, discuss with them how we want to proceed and we'll take their feedback. But yeah.
+**Slide Text Update**
 
-Bucko, Ahmet   7:00
-But this is the situation yet.
+* End-user configurability for new-form onboarding
+* Thresholds for handwriting and low-quality scan handling
+* Regulatory submission integration (direct vs indirect)
+* Ownership for retraining cadence and drift monitoring
+* **API polling frequency and error-handling for email ingestion**
+* **JSON ↔ XML schema ownership and integration handoff**
 
-Inayat, Sajid   7:01
-OK. Yeah, yeah.
+**Speaker Notes**
 
-Peti, Helios   7:03
-OK.
+> We’ll clarify several open points with the client: how configurable onboarding should be, thresholds for handwriting confidence, and whether submissions go direct or through intermediaries. Additionally, we need to finalize who owns the JSON-to-XML schema mapping, and confirm the polling and retry logic for the Graph API listener.
 
-Inayat, Sajid   7:06
-OK. You know, that was helpful. Thank you.
+---
 
-Bucko, Ahmet   7:09
-Yep.
+## ✅ **Slide 6 – Next Steps**
 
-Peti, Helios   7:10
-Thank you as well, Said, for your time. Also, you are now. Thank you as well for the explanation.
+**Slide Text Update**
 
-Bucko, Ahmet   7:12
-Anytime. Yep, Yep. Let's if you want, let's keep this chat.
+* Finalize scope and environment approvals
+* Kick off MVP development after access granted
+* Confirm UI, validation, and audit requirements
+* **Finalize email ingestion API design (listener → Azure Function)**
+* Schedule FastTrack enablement (Azure DI, Functions)
+* Publish operational playbooks / runbooks
 
-Inayat, Sajid   7:17
-Yes, let's keep that.
+**Speaker Notes**
 
-Bucko, Ahmet   7:18
-Yeah, when we can connect and just, you know, meet now and we just continue.
+> Next, we’ll finalize scope and environments, then build the MVP foundation—especially the automated email ingestion service and validation UI. We’ll leverage Microsoft FastTrack to accelerate enablement and ensure transparent operations through runbooks and playbooks.
 
-Peti, Helios   7:23
-Also, Ahmed, don't mind if I ask, but I'm waiting for the response. If I immediately get the response, I may ping you for any logging issues I may have.
+---
 
-Inayat, Sajid   7:23
-Alright, cool.
+## 🎯 **Slide 7 – Summary**
 
-Bucko, Ahmet   7:31
-Of course, yes, yes, sure. Yep. Yep. I I will just be like I will go out for some walking and some grocery shopping. So other than that, I will be at home tonight. So yeah.
+**Slide Text Update**
 
-Peti, Helios   7:32
-Thank you. Thank you very much.
-No worries. It's OK. Thank you.
+> To summarize, we’re enhancing the existing Databricks-based pipeline with Azure-native components—Graph API ingestion, Document Intelligence extraction, schema validation, and human-in-loop review—to create a smarter, faster, and auditable AE/SAE processing system. MVP by year-end, production-ready by March.
 
-Inayat, Sajid   7:43
-Alright, cool. Thanks. Yeah.
+**Speaker Notes**
 
-Bucko, Ahmet   7:43
-Yep, Ben. Yep. See you.
+> The modernization eliminates manual SharePoint uploads and replaces them with an event-driven Graph API ingestion service. It integrates Azure Document Intelligence for context-aware extraction, validates outputs through schema checks, and escalates uncertain results for human review. Together, these enhancements create a secure, scalable, and compliant pipeline that meets our MVP and production targets.
 
-Inayat, Sajid   7:47
-Alright, see you guys. Bye now.
+---
 
-Peti, Helios   7:49
-See you guys. Say goodbye.
-
-Inayat, Sajid stopped transcription
+Would you like me to now create a **ready-to-use PPTX file (v3)** with these text + speaker notes inserted into each slide?
