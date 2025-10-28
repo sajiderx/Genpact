@@ -1,60 +1,104 @@
-KEY QUESTIONS FOR TOMORROW'S CALL
+Thanks all, great convo.  Some important parts that will inform our solution (correct me here, this is for alignment)...
 
-SharePoint Integration:
-- How many SharePoint folders are we monitoring?
-- What's the volume of documents - daily/weekly/monthly?
-- Are there any access/permission issues with SharePoint integration?
-- Do different folders represent different document types or sources?
+The case reports come in standard-ish formats delivered via email that attaches to a sharepoint folder separated by client.  Some of these are literally faxed copies of paper reports, and they even have examples of handwritten case reports.  So the core problem is finding the appropriate data on the form with high reliability and properly flagging when it needs human review.
 
-Current Process Pain Points:
-- What's the current turnaround time from document arrival to data entry?
-- How much time does the manual download/upload process take?
-- What percentage of documents require manual correction after processing?
-- What are the most common extraction errors you're seeing?
+So I think our databricks ingestion framework can absolutely handle the data ingestion (land the attachment, extract metadata, etc.) but the processing of those files is fundamentally an information extraction use case (e.g. "read this PDF").  We should assume high variability in field position, labeling and even data quality. 
 
-Document Characteristics:
-- What types of AE/SAE forms are you processing? (FDA 3500, CIOMS, custom forms?)
-- What percentage are handwritten vs. typed?
-- Are these mostly scanned PDFs or digital documents?
-- What's the typical page count per document?
+The ultimate need / ask / interest from the client is both to automate the high volume case reports for known forms and to allow for the system to handle new types of forms as they come in.  The direct ask is to make ingesting these new forms end-user configurable, although I'm not sure if that's how we'll implement it...this to me is the biggest unknown risk to the implementation.
 
-Data Requirements:
-- What downstream systems consume this data?
-- Are there specific regulatory requirements we need to meet (FDA, EMA)?
-- What's the required data quality threshold for auto-approval?
-- What fields are absolutely critical vs. nice-to-have?
+To directly address the question Sajid asked, I think enhancing something that's architectural sound and kindof works is a good idea ... but taking over other people's code is always tricky, so we should assess the work of taking over their stuff in practice vs. recoding their stuff and adding our stuff (my rule of thumb is if we have to touch 20% of the code a rewrite is usually easier).
 
-Current Prototype:
-- What's working well in the current prototype?
-- What are the biggest limitations or frustrations?
-- Is there any logic or rules we should preserve?
-- What would success look like for the enhanced version?
+Hope this is helpful, happy to huddle if needed.
+
+Steve 
+________________________________________
+From: Sajid Inayat <sajid.inayat@xponentl.ai>
+Sent: Saturday, October 18, 2025 12:14 PM
+To: Kharod, Dip <Dip.Kharod@genpact.com>; Frank Rotonta <frank.rotonta@xponentl.ai>; Steve Prewitt <steve.prewitt@xponentl.ai>
+Cc: Chris Reda <chris.reda@xponentl.ai>; Peti, Helios <Helios.Peti@genpact.com>
+Subject: Re: 
+ 
+Hi Dip,
+Thanks for weighing in... really helpful perspective. You’re absolutely right that the standard ingestion/curation/publishing approach fits well here. I hadn’t thought about framing it through that lens but it makes a lot of sense.
+
+A couple of things I want to make sure we’re aligned on before next week:
+
+The format variability piece is a bit tricky. These are technically structured forms (same fields across all sponsors), but the physical layout is all over the place. Like, “Patient Name” might be in the top left on Pfizer’s form and bottom right on Merck’s form so our profiling and DQ approach will need to be smart about finding fields by context, not just position. Definitely doable, just want to make sure we’re designing for that reality.
+
+On the pipeline side, I think we’re seeing the same picture:
+ • They’ve got Databricks handling extraction, but we need to add the normalization and validation layer on top
+ • Output needs to be standardized for regulatory submissions with full audit trail.
+
+One thing I’d love your take on - should we position this as enhancing what they already have with our framework wrapped around it or are we thinking bigger replacement? 
+
+My gut says enhance and optimize since they’ve already invested in the Databricks piece but curious what you think.
+
+Thanks again for the input!
+Sajid
+
+Get Outlook for iOS
+________________________________________
+From: Kharod, Dip <Dip.Kharod@genpact.com>
+Sent: Saturday, October 18, 2025 11:57:13 AM
+To: Frank Rotonta <frank.rotonta@xponentl.ai>; Sajid Inayat <sajid.inayat@xponentl.ai>; Steve Prewitt <steve.prewitt@xponentl.ai>
+Cc: Chris Reda <chris.reda@xponentl.ai>; Peti, Helios <Helios.Peti@genpact.com>
+Subject: Re: Re: 
+ 
+CAUTION: This email originates from outside our organization. Be cautious with links, attachments, or requests for sensitive information. Verify the sender before taking action to ensure security!
+
+As long as the different formats are structured, our ingestion framework, with profiling and DQ capabilities, will work. Additionally, it sounds like they need the standard data pipeline approach - ingestion, curation, and publishing data products.
+
+Happy to discuss the details next week. Thanks.
 
 
-TALKING POINTS
-When They Show You Their Current Solution:
-✅ I see you're manually bridging SharePoint to the processing system. We can automate that entire flow using SharePoint webhooks or scheduled polling. That alone would save significant manual effort.
-✅ For AE/SAE documents specifically, we'll need custom-trained Form Recognizer models. The pre-built models won't handle the regulatory forms well. Have you started training custom models yet?
-✅ One thing I'd recommend is separating the extraction logic (Model A) from the normalization logic (Model B). That gives us flexibility to enhance each independently and makes testing much easier.
-✅ For the narrative text fields in AE reports, we'll want to add NLP analysis. That'll help with severity assessment and medical coding.
-✅"We should implement a confidence-based routing system - high confidence goes straight through, medium confidence gets validated, low confidence gets manual review. That'll maximize automation while maintaining quality.
+Regards,
+Dip Kharod
+732-616-4398
+________________________________________
+From: Frank Rotonta <frank.rotonta@xponentl.ai>
+Sent: Saturday, October 18, 2025 5:27 AM
+To: Sajid Inayat <sajid.inayat@xponentl.ai>; Steve Prewitt <steve.prewitt@xponentl.ai>; Kharod, Dip <Dip.Kharod@genpact.com>
+Cc: Chris Reda <chris.reda@xponentl.ai>; Peti, Helios <Helios.Peti@genpact.com>
+Subject: Re: 
+ 
+>	WARNING - This email originated outside of Genpact.
+Do not reply, click on links or open attachments unless you recognize the sender and know the content is safe. If you believe the content of this email may be unsafe, please forward it as an attachment to thislooksphishy@genpact.com or use the 'This Looks Phishy' Outlook button.
 
+Plus Dip.
 
-AFTER THE CALL - DELIVERABLES
-Within 24 Hours:
-- Meeting summary with key findings
-- List of current system capabilities
-- Identified gaps and opportunities
+Dip can our ingestion framework help with some of this? 
 
-Within 1 Week:
-- Detailed architecture proposal
-- SharePoint integration design
-- Model A/B enhancement plan
-- Implementation roadmap with timeline
-- Resource requirements
+Get Outlook for Android
+________________________________________
+From: Sajid Inayat <sajid.inayat@xponentl.ai>
+Sent: Friday, October 17, 2025 4:01:55 PM
+To: Steve Prewitt <steve.prewitt@xponentl.ai>
+Cc: Chris Reda <chris.reda@xponentl.ai>; Frank Rotonta <frank.rotonta@xponentl.ai>; helios.peti@genpact.com <helios.peti@genpact.com>
+Subject: 
+ 
+Hi Steve,
+I wanted to give you a quick update on the code walkthrough call with Yash from Thermo Fisher this afternoon.
 
-Within 2 Weeks:
-- Technical specification document
-- Schema definitions for AE/SAE
-- Testing strategy
-- Success metrics and KPIs
+Yash walked us through their current document processing system. They’ve built a working prototype that uses Azure Blob Storage as the document repository, with Databricks handling the ML-based extraction through an MLOps pipeline. The system is processing actual AE/SAE pharmacovigilance forms (MedWatch, CIOMS formats). This is AS IS Flow and ready to be deployed.
+
+Challenge - They’re dealing with multi-sponsor submissions meaning the same form type i.e. MedWatch 3500 etc comes in dozens of different formats from different pharma companies. This format variability is the core accuracy challenge… what we build needs to handle this chaos, not just clean templates.
+
+Our Approach - I’m recommending a hybrid strategy that enhances their existing Databricks investment rather than replacing it. We’ll add Azure Form Recognizer for structured field extraction where appropriate, build the missing normalization/validation layers, and create the UI for manual review. This respects their work while optimizing the overall solution.
+
+Documentation Exchange - Yash will be sharing their architectural diagrams and technical documentation with us. I plan to send him our proposed approach first before reviewing their docs in detail. I want to make sure our recommendations come from an independent assessment rather than being overly influenced by their existing design choices. Once I receive their documentation, I’ll refine and adjust our approach accordingly to align with their architecture, address their specific concerns and incorporate their recommendations. The goal is to bring fresh perspective while being thoughtful about what they’ve already built.
+
+Access Update - Yash confirmed that tickets for our Thermo Fisher email accounts and MFA were submitted but our names aren’t showing up when he searches in Outlook yet. He said he’ll look into it. However, I got the sense that urgency is relatively low on their side… he mentioned we have “a few months” to get this done.
+I appreciate having adequate time based on Yash’s comments that we will be working on this project for several months to come, I’d prefer to design well and execute with a pass/fail fast mentality. We should set the pace and show rapid progress rather than drift into a slow-moving consulting engagement. Yash appreciated this thought. 
+
+Next Steps:
+1.	Attend Sprint Planning Meeting Monday Morning at 9 AM EST.
+2.	Send our proposed approach to Yash early next week.
+3.	Review their architectural documentation once received and refine our proposal.
+4.	Prepare a comprehensive presentation for the Oct 29 SOW meeting.
+5.	Follow up with Yash on the access issue.
+
+Let me know if you have any questions or want to discuss the approach.
+
+Warm Regards
+Sajid
+
