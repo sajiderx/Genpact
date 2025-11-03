@@ -1,0 +1,152 @@
+Perfect — based on your PowerPoint deck screenshots, here’s the updated content and refined speaker notes tailored to your goal:
+✅ emphasize that this is not net-new development,
+✅ position 2025 as the delivery year for MVP, and
+✅ frame 2026 as refinement and scale-up.
+
+⸻
+
+Slide 1: TFS Safety Case Processing Modernization
+
+Title: TFS Safety Case Processing Modernization
+Subtitle: Transition from Manual (Multi-Cloud Workflow) to Automated Azure-Native Pipeline
+
+Updated Text (Bottom paragraph):
+
+This initiative is not a net-new build but a modernization of the existing ASE pipeline using Azure-native services. Our focus is on improving observability, scalability, and accuracy by consolidating scattered components and simplifying architecture. The MVP will be delivered within 2025 using current assets and expertise, with refinement and optimization continuing into early 2026.
+
+Speaker Notes:
+
+We’re not introducing a new workflow — this is about strengthening and unifying what’s already built.
+The goal is to move away from multi-cloud friction (AWS + Azure) toward a single, scalable Azure-native design.
+Phase 1 (2025) will get us to an MVP; Phase 2 (2026) will optimize and productionize at scale.
+
+⸻
+
+Slide 2: Why Modernize the ASE Pipeline
+
+Problem Statement:
+	•	Current ASE pipeline spans AWS + Azure → adds operational overhead and fragmented observability.
+	•	Databricks prototype limits parallelization and lacks schema-driven validation.
+	•	Manual interventions lower accuracy and slow validation cycles.
+
+Value Proposition:
+	•	Unify on Azure with Document Intelligence for intelligent extraction.
+	•	Introduce schema-driven validation and built-in feedback loops.
+	•	Enable managed identity and observability through Azure Monitor.
+	•	Achieve scalability without re-engineering the pipeline.
+
+Speaker Notes:
+
+The goal here isn’t reinvention — it’s rationalization. We already have a functioning pipeline.
+We’re simply bringing all its moving parts into one consistent Azure-native framework — cutting down on latency, manual fixes, and credential dependencies.
+That’s how we achieve stability and scalability with minimal new development effort.
+
+⸻
+
+Slide 3: Current State
+
+Background:
+	•	Emails trigger ingestion; attachments processed by internal API.
+	•	Mix of structured and unstructured forms (PDFs, images, handwritten notes).
+	•	AWS Textract performs extraction; Databricks handles post-processing.
+	•	Limited normalization and schema enforcement.
+
+Core Problems:
+	•	Variable form layouts → inconsistent field capture.
+	•	Lack of standard validation logic or schema mapping.
+	•	Manual quality checks required.
+	•	Redundant maintenance across services.
+
+Speaker Notes:
+
+The current system already automates some steps but lacks unified orchestration and schema validation.
+Our opportunity isn’t to rebuild — it’s to streamline and modernize what’s proven to work.
+We’re leveraging Azure DI as a like-for-like replacement for Textract, not introducing a new AI dependency.
+
+⸻
+
+Slide 4: Future State
+
+Future-State Vision – Azure-Native Intelligent Pipeline
+	•	Ingestion: Outlook + Graph API + Azure Function + Blob
+	•	Extraction: Azure Document Intelligence (Layout/Read APIs)
+	•	Validation: Schema-based data normalization, data quality checks
+	•	Publishing: JSON/XML outputs with managed identity and audit trail
+
+Modernization Approach:
+	•	Enhance & Integrate: Retain Databricks ingestion; integrate Document Intelligence + review UI
+	•	Targeted Rewrite: Refactor existing Python/ADF logic for schema-driven flow
+	•	MVP Goal (2025): 85–90% extraction accuracy, validated through human-in-loop review
+	•	Refinement (2026): Retraining, auto-validation, and performance optimization
+
+Speaker Notes:
+
+Everything you see here already exists conceptually — we’re simply replacing Textract with Document Intelligence and tightening integration across services.
+By year-end 2025, we’ll have a working MVP; 2026 focuses on continuous improvement and full production readiness.
+This is achievable because the groundwork already exists — we’re upgrading, not rebuilding.
+
+⸻
+
+Slide 5: Migration Phases & Timeline
+
+Visual Timeline:
+Phase 1 (Now–Dec 2025) → MVP Build & Validation
+Phase 2 (Jan–Feb 2026) → Scale & Optimize
+Phase 3 (Mar 2026 onward) → Continuous Learning & Production Readiness
+
+Speaker Notes:
+
+Our 2025 work is squarely focused on integration and validation — not new platform development.
+The MVP by year-end will demonstrate stable ingestion, extraction, and validation flows.
+From early 2026, we’ll move into optimization and retraining phases — essentially polishing what’s already proven.
+This sequencing allows us to stay on track without overcommitting scope.
+
+⸻
+
+Slide 6: Risk & Mitigation Plan
+
+Updated Risks:
+
+Risk	Mitigation
+Model Accuracy	Incremental retraining, fallback extraction logic, human review for <70% confidence.
+Azure Throttling/Failures	Multi-region setup, retry policies, and idempotent workflow design.
+Team Enablement	Azure FastTrack enablement for Functions and DI services.
+Timeline Pressure	Deliver MVP early, validate fast, and scale iteratively.
+
+Speaker Notes:
+
+These risks are known and controlled — all are refinements, not unknowns.
+Model accuracy and throttling can be mitigated with configuration and retraining.
+Our real advantage is that these are operational risks, not architectural blockers.
+
+⸻
+
+Slide 7: Alignment Dependencies
+
+Items:
+	•	Confirm thresholds for handwriting and low-quality scans.
+	•	Finalize XML transformation ownership (upstream vs. downstream).
+	•	Validate regulatory submission path (direct vs. intermediate).
+	•	Define retraining cadence and drift monitoring approach.
+
+Speaker Notes:
+
+These are coordination items, not blockers.
+Most dependencies relate to ownership and confidence thresholds, which can evolve alongside MVP testing.
+None of these change the 2025 deliverable timeline — they fine-tune the 2026 refinement plan.
+
+⸻
+
+Slide 8: Next Steps
+
+Updated Bullets:
+	•	Finalize scope and environment approvals.
+	•	Kick off MVP after access and DI enablement.
+	•	Confirm UI, validation, and audit requirements.
+	•	Schedule Azure FastTrack enablement (DI + Functions).
+	•	Publish operational playbooks and runbooks.
+
+Speaker Notes:
+
+These steps make the 2025 MVP tangible — by confirming access, aligning governance, and establishing runbooks, we prepare for a fast and stable execution.
+Nothing here introduces new development risk — we’re simply tightening integration and operational governance.
