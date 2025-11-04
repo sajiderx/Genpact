@@ -1,0 +1,32 @@
+Summary,Issue Type,Description,Acceptance Criteria,Priority,Labels,Story Points,Fix Version/s,Epic
+Month 1 - Document Pre-Processing,Story,"As a Data Engineer, I want to preprocess incoming documents using OpenCV or Azure Vision for de-skew, denoise, and binarization so that downstream extractors achieve higher OCR recall and fewer bounding-box errors.","- 90% of incoming PDFs/images are normalized before extraction.
+- Extraction confidence improves ≥5% compared to raw inputs.",High,MVP,5,v2,TFS-AI-Modernization
+Month 1 - Layout Registry,Story,"As a Developer, I want to persist layout fingerprints in a registry (Cosmos DB or PostgreSQL + pgvector) so that known layouts can be detected quickly and reused.","- Registry supports K-NN similarity lookup.
+- Lookup latency ≤2s.
+- Thresholds 0.78/0.88 configurable.",High,MVP,5,v2,TFS-AI-Modernization
+Month 1 - Arbitration & Schema Validation,Story,"As a QA Engineer, I want an arbitration layer combining Textract, DI, and AOAI outputs with schema checks so that malformed JSON never reaches publishing.","Arbitration weights configurable.
+Schema validation blocks any non-conforming payload.",High,MVP,5,v2,TFS-AI-Modernization
+Month 1 - Metrics Dashboard,Story,"As a Product Manager, I want visibility into field-level accuracy, HITL rate, and time-to-publish so that we can track progress and ROI.","- Dashboard shows accuracy, HITL%, publish latency, schema failures.
+- Refresh latency ≤1h.",Medium,MVP,3,v2,TFS-AI-Modernization
+Month 2 - Policy Parameterization,Story,"As a Data Scientist, I want thresholds and model weights externalized in JSON policy files so that tuning requires configuration, not code.","Thresholds/weights reload without redeploy.
+Policy audit trail maintained.",High,Policy,5,v2,TFS-AI-Modernization
+Month 2 - HITL UI,Story,"As a Reviewer, I want a simple web UI showing original, candidate, and diffs so that I can approve or correct extractions quickly.","- Reviewer can view/edit/approve within <30s per case.
+- All actions logged to audit table.",High,HITL,5,v2,TFS-AI-Modernization
+Month 2 - Registry Auto-Promotion,Story,"As an MLOps Engineer, I want corrected samples automatically promoted to the layout registry after ≥3 HITL approvals so that the system learns continuously.","- Promotion threshold configurable (default 3).
+- New layout visible in registry ≤24h.",High,HITL,5,v2,TFS-AI-Modernization
+Month 3 - DI-General Integration,Story,"As a Developer, I want DI-General configured for unknown layouts so that extraction remains consistent without custom training.","Confidence calibration merges DI-General + AOAI results.
+Unknown layouts processed without failure.",Medium,Generalization,5,v2,TFS-AI-Modernization
+Month 3 - Domain Validation,Story,"As a Data Validator, I want RxNorm and MedDRA lookups integrated so that medical entities are verified before submission.","Drug/dose fields validated against RxNorm.
+Invalid entries logged with reason.",High,Validation,5,v2,TFS-AI-Modernization
+Month 3 - Layout Clustering,Story,"As a Platform Engineer, I want to cluster and auto-merge similar layouts (≥0.95 cosine sim) so that registry growth stays under control.","- Nightly merge job executed.
+- Cluster entropy Δ<0.05 per week.",Medium,Registry,5,v2,TFS-AI-Modernization
+Month 4 - High-Volume Layout Training,Story,"As a Data Scientist, I want to train DI-Custom models for top 10 layouts so that we achieve >90% accuracy on major volume.","- 10 DI-Custom models deployed.
+- Confidence uplift ≥15% vs generic.",High,DI-Custom,8,v2,TFS-AI-Modernization
+Month 4 - Routing Update,Story,"As a DevOps Engineer, I want Known layouts routed to DI-Custom first so that ensemble always prefers the best model.","Policy file updated.
+Arbitration confirms DI-Custom priority.",Medium,DI-Custom,3,v2,TFS-AI-Modernization
+Month 5 - Client-Specific Fine-Tuning,Story,"As a Solution Architect, I want AOAI fine-tuning profiles per client so that premium customers get higher accuracy without affecting global models.","- Profiles selectable per client ID.
+- Validation accuracy +10% vs baseline.",High,FineTuning,8,v2,TFS-AI-Modernization
+Month 5 - One-Click Promotion,Story,"As a Reviewer, I want a Promote-to-Custom button in HITL so that corrected layouts convert to DI-Custom training sets immediately.","- Button triggers Azure pipeline for DI-Custom project.
+- Status visible in registry within 24h.",Medium,FineTuning,5,v2,TFS-AI-Modernization
+Month 5 - Operational Hardening,Story,"As a DevOps Lead, I want SLAs, alerts, and retention policies defined so that the system is production-ready and auditable.","- SLAs documented (uptime 99.5%, HITL SLO<4h).
+- Alert rules active in App Insights.",High,Ops,5,v2,TFS-AI-Modernization
