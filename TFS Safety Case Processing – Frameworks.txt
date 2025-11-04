@@ -1,0 +1,157 @@
+TFS Safety Case Processing – Framework Design (MVP-Updated)
+
+Purpose: Strengthen the existing AE pipeline (keep Textract) while adding adaptive layout intelligence, arbitration/validation discipline, client fine-tuning, and full observability. Priority is quality & traceability, not cloud unification.
+
+
+1) Executive Summary 
+
+We’re keeping the current Textract-centric pipeline but adding a thin, modular intelligence layer on top: a Layout Registry with vector search, embedding-based clustering (ADAH) to handle “infinite layouts,” auto-generalization to keep the registry tidy, client-specific fine-tuning where accuracy must exceed 90%, and end-to-end observability. These changes directly answer Yash’s guidance: optimize accuracy, auditability, and repeatability, not platform purity. Preprocessing and final XML publishing remain Phase-2 accelerators once MVP is stable.
+
+
+
+2) Scope (MVP vs Phase-2)
+
+| Layer / Capability                                           | In MVP (Phase-1)        | Phase-2 (after MVP stability) |
+|  | -- | -- |
+| Layout Registry (Postgres + pgvector)                    | ✅                       | —                             |
+| Embedding-based Clustering (ADAH)                        | ✅                       | —                             |
+| Layout Generalization (auto-merge similar layouts)       | ✅                       | —                             |
+| Client-Specific Fine-Tuning (AOAI prompt/model profiles) | ✅ (for premium clients) | expand to more clients        |
+| Observability & Metrics (App Insights + OTel)            | ✅                       | deepen SLOs & anomaly models  |
+| Arbitration + Schema Validation (with semantic checks)   | ✅                       | add advanced business rules   |
+| Preprocessing (OpenCV / Azure Vision)                    |➡️                      | ✅                             |
+| Publishing to XML path (Function + contracts)            | ➡️                      | ✅                             |
+
+> Why this split? It keeps MVP laser-focused on accuracy/traceability (what Yash asked), while deferring nice-to-have platform polish until the framework is proven.
+
+
+
+3) Design Principles
+* Accuracy first: choose the best extractor output via arbitration; measure everything.
+* Config > code: policies, thresholds, model routing live in config, not code.
+* Reusable intelligence: learn layout once, reuse via registry; prevent registry bloat via clustering/generalization.
+* Human-in-the-loop: corrections flow back to training/fine-tuning.
+* Audit everywhere: every decision is explainable (scores, winner, reason).
+
+
+
+4) Updated Data Flow (blueprint)
+1. Ingest (existing) → PDF/TIFF arrives; Textract runs (structure + text).
+2. Fingerprint & Embed → create layout fingerprint (page graph + text features); generate embedding vector.
+3. Layout Registry (pgvector KNN)
+
+   * If match ≥ threshold → load known policy for that layout/cluster.
+   * Else → route to Generic policy; record as *candidate_new*.
+4. Multi-Extractor Candidates (as available) → Textract (existing) ± AOAI/DI if enabled.
+5. Arbitration → score candidates (per field) and pick the winner; log reasons/scores.
+6. Schema Validation → JSON schema + semantic checks (RxNorm, MedDRA, dates/units).
+7. Client Profile (optional) → apply client-specific prompt/model for premium accuracy targets.
+8. HITL (if below confidence) → reviewer corrects; corrections feed registry and fine-tuning sets.
+9. Publish (MVP: JSON) → write validated JSON + audit trail; (Phase-2) XML path contract & Function.
+10. Observability → OpenTelemetry spans and metrics at every step.
+
+
+
+5) Component Designs (MVP)
+
+5.1 Layout Registry
+* Store: Postgres + pgvector; tables: `layouts`, `clusters`, `policies`, `client_profiles`.
+* Write path: save fingerprint + embedding + policy pointer.
+* Read path: KNN search → nearest layout or cluster → policy load.
+* Why: avoids re-inventing extraction per form; supports “infinite layouts”.
+
+Key Requirements
+* KNN response < 100 ms at P95 for N≈50–100k entries.
+* Threshold and top-k are config-driven (per doc type).
+* Versioned entries (layout drift tracking).
+
+5.2 Embedding-based Clustering (ADAH)
+* Inputs: embeddings from Textract-derived features.
+* Algo: cosine similarity; HDBSCAN/DBSCAN (density-based) to form clusters.
+* Auto-merge rules: merge clusters if centroid similarity > τ and policy compatibility matches.
+* Why: prevents registry explosion; turns 100 variants into one reusable cluster.
+
+5.3 Arbitration + Schema/Semantic Validation
+* Arbitration: weighted voting per field (source reliability × field difficulty × historical accuracy).
+* Tie-breakers: source precedence, recency of model, or committee fallback.
+* Schema: JSON schema (required, types, ranges).
+* Semantic checks: RxNorm/MedDRA lookup, date/unit normalization, cross-field rules (e.g., AE present ⇒ Severity required).
+* Why: consistent, defensible decisions; reduces false positives.
+
+5.4 Client-Specific Fine-Tuning
+* Profiles: YAML per client (routing, thresholds, model/prompt).
+* Data: use HITL-corrected samples as training set.
+* AOAI: prompt-tuning or fine-tuning; register version + lineage.
+* Why: hits 90%+ for premium clients without breaking global behavior.
+
+5.5 Observability & Metrics
+* Tracing: OpenTelemetry spans: ingest → registry → arbitration → validation → publish.
+* KPIs: field-level accuracy, agreement rate, schema failure rate, HITL rate, latency, drift, registry size/entropy.
+* Dashboards: by layout/cluster and by client.
+
+
+
+6) APIs & Config (MVP)
+
+Registry API
+* `POST /layouts` (save fingerprint+vec)
+* `POST /layouts/search` (KNN, {vector, topk, τ})
+* `GET /policies/{layout_id}`
+
+Arbitration API
+* `POST /arbitrate` (candidates[], policy_id) → winner + scores
+
+Validation API
+* `POST /validate` (json) → {ok|fail, reasons[], fixes?}
+
+Config
+* `policies/*.yaml` (field weights, extractors on/off, thresholds)
+* `clients/*.yaml` (routing & models)
+* `schemas/*.json` (JSON Schema; XML mapping kept for Phase-2)
+
+
+7) Functional Requirements (selected)
+* KNN layout match ≥ 0.9 F1 on known layouts; ≥ 0.7 F1 on near-neighbors.
+* Arbitration improves field-level accuracy by ≥ 5pp vs best single extractor baseline.
+* Premium profile reaches ≥ 90% field-level accuracy on target layouts.
+* Drift alert when cluster entropy or mismatch rate grows > X% over rolling 7 days.
+* P95 end-to-end latency (doc→validated JSON) ≤ 60s for ≤ 10 pages; scales linearly.
+
+
+8) Non-Functional & Compliance
+* Auditability: store winners, losers, scores, thresholds, and policy version per field.
+* Security: Managed Identity (where used), secrets in Key Vault; PHI encrypted at rest/in transit.
+* Reliability: idempotent processing; poison-queue for failed docs; retry policy configurable.
+* Privacy: retain HITL artifacts per retention policy (client-approved).
+
+9) Workplan & Milestones (MVP)
+
+Month 1
+* Stand up Postgres + pgvector; embed pipeline; KNN search; seed initial registry.
+* Implement arbitration skeleton + baseline policy; JSON schema validator; MedDRA/RxNorm lookups.
+* OTel spans + minimal App Insights dashboard.
+
+Month 2
+* ADAH clustering + auto-merge; drift metrics; policy tuning; HITL hooks (simple UI or CSV loop).
+* Accuracy dashboard (by field/layout/client). First “premium” client profile drafted.
+
+Month 3
+* First client fine-tuning run; policy re-weighting using live outcomes; SLA/alert rules.
+* MVP sign-off (validated JSON path). Plan Phase-2 (preprocess + XML Function).
+
+
+10) RACI (MVP high-level)
+* Design/Owner: Sajid
+* Data/Models & AOAI: Helios (+ team)
+* Policies/Schema: Yash (source of truth)
+* Ops/Observability: Sajid + Helios
+* HITL Workflow: Product/QA + Eng
+
+
+11) Open Questions / Dependencies
+* Final JSON schema (authoritative) & XML mapping contract (Phase-2).
+* AOAI deployment quotas (throughput) for fine-tuning/routing.
+* Access to RxNorm/MedDRA sources (API vs cached tables).
+* Sample set coverage for initial clustering thresholds.
+
+
