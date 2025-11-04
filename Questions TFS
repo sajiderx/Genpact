@@ -1,0 +1,58 @@
+Q1: What is “infinite layout handling via embedding-based clustering and ADAH”?
+
+
+It means the framework can handle *any number of new form layouts* without manually training a model for each one.
+
+* We use embedding-based clustering — turning layouts into numeric “fingerprints” and grouping similar ones together automatically.
+* ADAH (Adaptive Data Annotation Heuristics) helps by learning from corrections made in HITL and applying those rules to future similar layouts.
+  Value: It scales intelligently — no more retraining for every layout variation.
+
+Okay, imagine you’re sorting different types of forms — some have boxes here, some there.
+Instead of a person teaching the computer what each one looks like,
+we give the computer a way to “see” all forms as shapes and patterns (that’s the embedding).
+
+It then groups similar forms together automatically (that’s the clustering part).
+And when a person fixes something once, the system remembers the fix and applies it to future similar forms (that’s the ADAH part — it learns from experience).
+
+👉 In short: The system teaches itself to handle new layouts without needing a person to program every one.
+
+
+Q2: Didn’t we already discuss this — confidence scoring, arbitration, schema validation, semantic checks?
+
+
+Yes — this is the *refined version* of what we discussed.
+Earlier, confidence scoring was mostly about extractor accuracy.
+Now, we’ve expanded it into a unified arbitration layer that also decides which model’s output (Textract, DI, or AOAI) to trust per field, using weighted historical accuracy.
+Likewise, schema validation now includes semantic checks — ensuring fields like drug names, event severity, or dates are valid per external standards (e.g., RxNorm, MedDRA).
+Value: This closes the loop between model output and regulatory data integrity.
+
+Before, we had the models (Textract, DI, AOAI) each trying to guess answers — like three kids shouting answers to a quiz.
+Now, we’ve added a referee (the arbitration layer) who listens to all three and picks the most reliable one based on who’s been right most often.
+That’s what confidence scoring does.
+
+Then, schema validation checks the final answer — like a teacher marking homework — to make sure things make sense (dates look like dates, drug names are real, severity isn’t missing).
+
+👉 In short: We made the system smarter — it now double-checks and picks the best answer automatically.
+
+Q3: What do you mean by “Framework foundation: Layout registry + Confidence scoring + HITL loop for adaptive scaling”?
+
+
+That’s our *three-pillar foundation* for continuous improvement:
+
+1. Layout Registry → remembers every layout and correction for reuse.
+2. Confidence Scoring → dynamically chooses the best extractor output per case.
+3. HITL Loop → human feedback flows back into registry and models.
+   Value: Together, they enable adaptive scaling — the system gets smarter with every document processed, reducing manual review over time.
+
+Think of this as a memory, brain, and feedback system:
+
+Layout Registry (Memory): Keeps track of every form we’ve seen and how we handled it.
+
+Confidence Scoring (Brain): Decides who gave the best answer.
+
+HITL Loop (Feedback): If a person fixes something, the system remembers that correction forever.
+
+👉 In short: The system learns from every mistake and keeps getting better over time — like a student that never forgets a lesson.
+
+
+
