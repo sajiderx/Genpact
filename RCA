@@ -1,0 +1,37 @@
+Root Cause Analysis (RCA) Report
+
+Case Intake Application – AI Extraction Stress Test
+Prepared by: Sajid Inayat
+Primary Owner: Helios Peti
+Date: November 6, 2025
+
+1. Executive Summary
+
+This RCA analyzes failures encountered during the stress testing of the Case Intake Application’s AI extraction module.
+Three core issues were identified: (1) large image handling, (2) multi-page document timeouts, and (3) bulk upload delays.
+Immediate corrective actions are underway, led by Helios Peti under Sajid Inayat’s supervision, to validate fixes and stabilize the AI processing pipeline before the next test cycle.
+
+2. Problem Description
+
+Stress tests involved simultaneous uploads of large image-heavy PDFs and 100-page multi-document batches through the Case Intake Application. Failures included extraction stalls, incomplete outputs, and performance degradation under concurrent load.
+
+3. Root Cause Analysis
+Issue	Root Cause	Evidence / Logs	Severity
+Large Image Failures	OCR engine exceeded pixel limit on high-DPI images (300–600 DPI) within 32 MB PDFs	“IMAGE_SIZE_LIMIT_EXCEEDED” errors in logs	High
+Multi-Page Timeout	Memory exhaustion from concurrent long-running OCR jobs on 100-page PDFs	Pending jobs > 2 hours	High
+Bulk Upload Latency	Worker pool saturation; limited concurrency causing serialized queueing	94 files ≈ 1 min each	Medium
+4. Corrective & Preventive Actions (CAPA)
+#	Action	Owner	Target Date	Expected Outcome
+1	Downsample and reprocess 32 MB file (~150 DPI)	Helios Peti	Nov 8	Validate image-size stability
+2	Implement pre-validation & compression for oversized images	Helios / Engineering Team	Nov 9	Prevent OCR overload before processing
+3	Memory profiling for large PDF batches	Helios Peti	Nov 9	Identify optimal memory allocation
+4	Concurrency tuning & re-test in staged batches (30/60/90 files)	Helios Peti	Nov 11	Improve throughput and reduce queue delay
+5. Findings Summary & Recommendations
+
+Image resolution, not file size, is the main driver of failures.
+
+Processing performance degrades linearly with page count under concurrent load.
+
+Implementing image pre-checks and workload batching should improve stability by > 60%.
+
+Introduce auto-scaling or event-driven job dispatch for future testing.
