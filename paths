@@ -1,0 +1,59 @@
+Here’s the visual flow summarized clearly so you can picture (or sketch) it until I render it for export:
+
+                 ┌────────────────────┐
+                 │   1. Preprocess    │
+                 │ Denoise, deskew,   │
+                 │ normalize pages    │
+                 └────────┬───────────┘
+                          │ clean pages
+                          ▼
+             ┌────────────────────────────┐
+             │ 2. Fingerprint + Embedding │
+             │ Layout hash + vector model │
+             └────────┬───────────────────┘
+                      │ embeddings
+                      ▼
+        ┌──────────────────────────────────┐
+        │ 3. KNN Search (Layout Registry) │
+        │ Compare with pgvector registry   │
+        └────────┬─────────────────────────┘
+         match ≥ τ│                       │match < τ
+                  ▼                       ▼
+   ┌──────────────────────────┐   ┌──────────────────────────────┐
+   │ Known Layout Path        │   │ Unknown Layout Path          │
+   │ Load policy → Extractors │   │ Use generic policy           │
+   └────────┬─────────────────┘   └────────┬─────────────────────┘
+            │ field candidates             │ field candidates
+            ▼                              ▼
+  ┌────────────────────────┐     ┌────────────────────────┐
+  │ 4A/4B Multi-Model      │     │ 4B Generic Extraction  │
+  │ Extraction (Textract,  │     │ (safe AOAI prompt etc.)│
+  │ AOAI, DI optional)     │     └────────┬───────────────┘
+  └────────┬───────────────┘              │
+           ▼                              ▼
+     ┌──────────────────────────────┐ ┌──────────────────────────────┐
+     │ 5. Arbitration Layer         │ │ 5. Arbitration (weighted bias)│
+     │ Confidence & weight scoring  │ │ Bias toward precision models  │
+     └────────┬─────────────────────┘ └────────┬──────────────────────┘
+              ▼                                ▼
+   ┌──────────────────────────────┐   ┌──────────────────────────────┐
+   │ 6. Schema + Semantic Check   │   │ 6. Stricter Validation       │
+   │ RxNorm, MedDRA, types, etc.  │   │ Likely triggers HITL review  │
+   └────────┬─────────────────────┘   └────────┬──────────────────────┘
+            │ good confidence               │ low confidence
+            ▼                                ▼
+   ┌──────────────────────┐        ┌──────────────────────────────┐
+   │ 7. Publish JSON/XML  │        │ HITL Review → Promote Layout │
+   │ + Confidence Scores  │        │ + Policy to Registry         │
+   └──────────────────────┘        └──────────────────────────────┘
+
+Legend:
+	•	τ = similarity threshold (e.g., 0.8)
+	•	HITL = Human-in-the-loop
+	•	pgvector = PostgreSQL vector search
+	•	AOAI = Azure OpenAI
+	•	Registry stores embeddings, layout ID, and policies
+
+This is the same flow used in your MVP AI Framework — showing both known and unknown layout handling paths, inference arbitration, validation, and continuous learning.
+
+Would you like me to generate this as an actual diagram image (Visio-style) so you can include it in your architecture deck?
