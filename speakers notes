@@ -1,12 +1,196 @@
-ID	Epic	Story Title	Description	Assignee	Story Points	Complexity	Status	Dependencies
-1.3	Architecture & Design	Define Layout Registry Data Model (Azure Table + Blob)	Define Azure-native schema for registry using Table Storage + Blob. Includes ERD for layouts, embeddings, policies, audit log.	Sajid	3	M	Not Started	None
-1.4	Architecture & Design	Define Tiered Classification Rules	Document Tier 1/2/3 thresholds, DEFAULT fallback, consensus rules.	Sajid	3	M	Not Started	None
-1.5	Architecture & Design	Define HITL Workflow	Define reviewers, triggers, corrections, promote-to-registry flow.	Sajid	2	S	Not Started	None
-2.1	Infra	Provision Azure Table Storage	Infra creates a Table Storage account for registry metadata.	TFS Infra Team	2	S	Not Started	None
-2.2	Infra	Provision Azure Blob Storage	Infra creates a Blob container for embeddings + artifacts.	TFS Infra Team	2	S	Not Started	None
-2.3	Infra	Optional: Azure AI Search / ADX	Scale path for Phase-2 vector indexing.	TFS Infra Team	5	L	Future	None
-3.1	Registry	Fingerprinting Engine (Azure Blob + Table)	SHA-256 fingerprinting; store fingerprints in Table; raw artifacts in Blob.	Helios	3	M	Not Started	1.3
-3.2	Registry	Skip-on-Repeat Fast Path	If fingerprint exists, bypass full extraction + mark SKIPPED.	Helios	3	M	Not Started	3.1
-3.3	Registry	Registry Storage Integration (Azure Table + Blob)	Implement CRUD logic for registry tables + blob-based embeddings.	Helios	3	M	Not Started	1.3
-3.4	Registry	In-App KNN Similarity Engine	Compute cosine similarity in code; no DB index required for MVP.	Helios	3	M	Not Started	1.3
-4.1	Embeddings	Hybrid Embedding Pipeline (Blob Storage)	Generate vectors and store them in Blob; link in Table Storage.	Helios	3	M	Not Started	None
+Below is the **Jira-ready export** for every updated story — **only Summary, Description, and Acceptance Criteria**, nothing else.
+You can copy/paste each row into Jira or I can generate a CSV if you prefer.
+
+---
+
+# ✅ **1.3 – Define Layout Registry Data Model (Azure Table + Blob)**
+
+**Summary:**
+Define unified registry data model using Azure Table + Blob with vector-placeholder support.
+
+**Description:**
+Design the full relational-equivalent schema for the Layout Registry using Azure Table Storage for metadata and Azure Blob Storage for embeddings/layout artifacts. Ensure compatibility with future CosmosDB PG or Azure AI Search by keeping vector fields abstracted behind a storage adapter. The model must support layouts, embeddings, policies, audit logs, versioning, timestamps, soft deletes, and schema evolution. Migration scripts must run on both local Docker PG (for testing) and Azure Table Storage.
+
+**Acceptance Criteria:**
+
+* ERD completed with entities: `layouts`, `layout_embeddings`, `layout_policies`, `registry_audit_log`.
+* Vector stored as: base64 blob OR JSON list depending on adapter.
+* Versioning, soft delete, and timestamps defined for all tables.
+* Migration scripts provided for local PG + Azure Table provisioning.
+* Reviewed with Helios and approved for implementation.
+
+---
+
+# ✅ **1.4 – Define Tiered Classification Rules**
+
+**Summary:**
+Define Tier 1/2/3 routing rules for layout similarity classification.
+
+**Description:**
+Document and finalize the classification thresholds and rules used to route documents after similarity search. Define logic for Tier 1 (high-confidence known layout), Tier 2 (ambiguous), and Tier 3 (unknown layout requiring generic extraction). Rules must be configurable through policy files so they can be tuned without code changes.
+
+**Acceptance Criteria:**
+
+* Thresholds documented: Tier1 ≥0.80, Tier2 0.66–0.79, Tier3 <0.66.
+* DEFAULT fallback behavior documented.
+* Cluster consensus logic described.
+* Packaged as a policy file shared with Helios.
+* Rules are configuration-based, not hardcoded.
+
+---
+
+# ✅ **1.5 – Define HITL Workflow**
+
+**Summary:**
+Define Human-in-the-Loop workflow and feedback loop for low-confidence cases.
+
+**Description:**
+Design how HITL reviewers receive low-confidence extractions, how corrections are logged, and how approved data is promoted back into the registry and fine-tuning datasets. Define required audit fields, reviewer actions, and approval lifecycle. HITL is not part of MVP extraction path but must be documented for future extension.
+
+**Acceptance Criteria:**
+
+* HITL workflow diagram created.
+* Audit fields finalized (reviewer, timestamp, correction reason, approver).
+* Promotion-to-registry logic documented.
+* HITL feedback format defined so it can be consumed by fine-tuning pipeline.
+* Reviewed with Helios and QA.
+
+---
+
+# ✅ **2.1 – Provision Azure Table Storage for Registry Metadata**
+
+**Summary:**
+Provision Azure Table Storage for registry tables.
+
+**Description:**
+Request creation of Azure Table Storage for layout metadata, embeddings metadata, policies, and audit logs. Required for production deployment but Helios can continue local development using Docker PG.
+
+**Acceptance Criteria:**
+
+* Azure Table Storage account created.
+* Tables provisioned via IaC or ARM templates.
+* Access roles assigned.
+* Connection strings stored in Key Vault.
+
+---
+
+# ✅ **2.2 – Provision Azure Blob Storage for Embeddings & Artifacts**
+
+**Summary:**
+Provision containerized blob storage for layout artifacts.
+
+**Description:**
+Request Azure Blob Storage container to store embedding vectors, binary artifacts, and fingerprint snapshots. Required for storing high-volume binary data decoupled from metadata.
+
+**Acceptance Criteria:**
+
+* Blob container created.
+* Folder structure documented (`layouts/`, `embeddings/`, `artifacts/`).
+* SAS or RBAC permissions defined.
+* Config shared with Helios.
+
+---
+
+# ✅ **3.1 – Fingerprinting Engine (Azure Table + Blob)**
+
+**Summary:**
+Implement deterministic SHA-256 fingerprinting for layout repeat detection.
+
+**Description:**
+Build a fingerprinting engine that generates a structurally-stable SHA-256 hash for each input document and stores metadata in Azure Table Storage. Binary snapshots or normalized layout content stored in Blob. Duplicate detection must mark the record with skip reasons and audit details.
+
+**Acceptance Criteria:**
+
+* Identical input → identical SHA-256 hash.
+* Fingerprint + doc_id + timestamps stored in Azure Table.
+* Normalized layout snapshot stored in Blob.
+* Duplicate detection marks: `duplicate_skipped=true`, with skip reason.
+* Unit tests verifying consistency.
+
+---
+
+# ✅ **3.2 – Skip-on-Repeat Fast Path**
+
+**Summary:**
+Implement pre-processing shortcut using fingerprint to skip repeated documents.
+
+**Description:**
+Add logic at the start of pipeline to check Table Storage for an existing fingerprint. If present, the pipeline returns a SKIPPED status instead of re-running embeddings and LLM extraction.
+
+**Acceptance Criteria:**
+
+* Existing fingerprint → pipeline terminates before model calls.
+* SKIPPED result written to audit log with trace_id.
+* New documents proceed normally.
+* Unit tests included.
+
+---
+
+# ✅ **3.3 – Registry Storage Integration**
+
+**Summary:**
+Implement CRUD operations for registry entities using Azure Table Storage + Blob.
+
+**Description:**
+Develop read/write layer for layouts, embeddings, and policies. Must use clean repository pattern so storage backends can be swapped (Azure Table, Cosmos PG, etc.).
+
+**Acceptance Criteria:**
+
+* CRUD for layouts, embeddings, policies implemented.
+* Blobs stored and versioned correctly.
+* Repository abstraction documented.
+* Integration tests for Table + Blob.
+
+---
+
+# ✅ **3.4 – In-App KNN Similarity Engine**
+
+**Summary:**
+Implement cosine-similarity based KNN in application layer.
+
+**Description:**
+Compute vector similarity in the worker instead of DB. Load embeddings from Blob, run KNN, return matches with similarity scores. Optimized for <250 vectors (MVP scale).
+
+**Acceptance Criteria:**
+
+* KNN returns top-k matches with scores.
+* Average latency <100ms for 200 vectors.
+* Thresholds applied for Tier 1/2/3.
+* Tested with sample embeddings.
+
+---
+
+# ✅ **3.5 – `/promote` API for HITL-Reviewed Layouts**
+
+**Summary:**
+Add API to promote HITL-approved layouts into registry.
+
+**Description:**
+Implement service endpoint that accepts HITL-corrected examples and adds them into registry tables + blob embedding store.
+
+**Acceptance Criteria:**
+
+* `/promote` endpoint implemented.
+* Writes metadata + embeddings + audit logs.
+* Version incremented on update.
+* HITL workload is optional for MVP but API exists.
+
+---
+
+# ✅ **3.6 – Seed Initial Layouts for MVP**
+
+**Summary:**
+Load sample AE forms and initial embeddings.
+
+**Description:**
+Seed ~20–30 sample layouts/embeddings to enable KNN, routing, and classification testing.
+
+**Acceptance Criteria:**
+
+* Sample layouts added to Table & Blob.
+* Embeddings generated + stored.
+* KNN tested successfully.
+
+---
+
+# If you approve, I can produce **Jira CSV format** next or drop these directly into your Excel WBS.
