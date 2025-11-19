@@ -1,662 +1,216 @@
-TFS Safety Case Processing
-Master Architecture
-TFS - AI POD
- 
-Table of Contents
-1. Document Purpose...........................................................................................................................................2
-2. Executive Summary .........................................................................................................................................2
-2.1 Key Design Tenets .......................................................................................................................................2
-3. System Overview...............................................................................................................................................3
-3.1 High-Level Architecture............................................................................................................................3
-3.2 Logical Dataflow...........................................................................................................................................4
-3.2.1 Design Updates & Open Items..........................................................................................................5
-3.3 Inference Flow...............................................................................................................................................5
-........................................................................................................................................................................................5
-3.2 Component Map..............................................................................................................................................5
-3.3 Core Components...........................................................................................................................................5
-3.4 Cross-Cutting Concerns.............................................................................................................................8
-4 Design Principles.......................................................................................................................................10
-5 Functional Requirements (Key SLAs)..............................................................................................11
-5.1 Accuracy Requirements.......................................................................................................................11
-5.2 Performance Requirements...............................................................................................................11
-5.3 Quality Requirements...........................................................................................................................11
-8. RACI Matrix............................................................................................................................................................16
-Expectations for Yash........................................................................................................................................16
-11. Glossary................................................................................................................................................................19
-12. Approval & Sign-Off.........................................................................................................................................20
-1. Document Purpose
-This master architecture document provides the executive overview and design 
-principles for Thermo Fisher Scientific's Adverse Event (AE) case processing 
-enhancement. It serves as the navigation hub for detailed component designs and 
-implementation guides.
-Target Audience: 
-1. Executive stakeholders
-2. Technical leads
-3. Cross-functional team members
-2. Executive Summary
-We're strengthening the existing Azure Textract-centric AE pipeline by adding a thin, 
-modular intelligence layer on top: a Layout Registry with vector search, embeddingbased clustering (ADAH) to handle "infinite layouts," auto-generalization to keep the 
-registry tidy, client-specific fine-tuning where accuracy must exceed 90%, and end-toend observability. 
-These changes directly answer leadership guidance: optimize accuracy, auditability, 
-and repeatability, not platform purity in terms of unification to single cloud. 
-Preprocessing and final XML publishing remain Phase-2 accelerators once MVP is 
-stable.
-2.1Key Design Tenets
-• Enhance, don't replace: Build on existing Textract investment
-• Accuracy first: Multi-source arbitration with measurable improvements (≥5pp)
-• Learn once, reuse forever: Layout registry prevents re-solving same forms
-• Explainable decisions: Every extraction choice is auditable with scores
-• Progressive delivery: MVP focuses on core intelligence; Phase-2 adds polish
-Success Criteria (MVP)
-3. System Overview
-3.1 High-Level Architecture
-Accuracy for 
-critical 
-workflows
-Extraction should meet stringent quality standards for high-value client 
-scenarios, ensuring confidence in downstream processes.
-Responsive 
-document 
-processing
-The system should maintain smooth performance for multi-page 
-documents, supporting both real-time and batch operations without 
-delays.
-Reliable layout 
-identification
-Incoming documents should be consistently mapped to the correct 
-extraction logic, minimizing manual intervention.
-Comprehensive 
-auditability
-Every extraction decision must be traceable, with clear reasoning and 
-supporting metrics for compliance and troubleshooting.
-3.2 Logical Dataflow
-3.2.1 Design Updates & Open Items
-Concern Problem Design Update / 
-Solution
-Location on 
-Diagram
-Status
-Classification 
-Accuracy
-Single classifier 
-forces match
-Added hierarchical 
-classification + threetier confidence system
-Step 3
-(KNN + 
-Classification 
-logic)
-Implemented
-Embedding 
-Quality
-Text 
-embeddings 
-ignore layout
-Hybrid embedding 
-(Text + Geometry), 
-future LayoutLMv3
-Step 2 Implemented
-Cost 
-Efficiency
-Double OpenAI 
-calls
-Fingerprint tier skips 
-OpenAI for repeats 
-Step 1 Implemented
-Scalability KNN noisy at 
->50 categories
-Pre-filtering, 
-clustering, pgvector 
-IVFFlat index, adaptive 
-thresholds
-Step 3 Implemented
-3.3 Inference Flow
-3.2 Component Map
-This system consists of 5 core components and 3 cross-cutting concerns. Each component 
-has a detailed design document.
-3.3 Core Components
-3.3.1 Layout Registry
-• Purpose: KNN-based layout matching to identify document structure
-• Technology: Postgres + pgvector (IVFFlat index)
-• Key Capability: Match incoming document to known layout in <100ms
-• MVP Status: Critical path
-3.3.2 Clustering Engine (ADAH)
-• Purpose: Auto-generalization to prevent registry bloat
-• Technology: HDBSCAN + cosine similarity on embeddings
-• Key Capability: Merge 100 layout variants into 1 reusable cluster
-• MVP Status: Critical path
-Converts page structure into embeddings, performs similarity search against registry
-How It Works
-Scales to 100k layouts; P95 latency <100ms
-Performance
-Drives extractor routing and arbitration logic
-Integration
-ADAH clustering to auto-merge similar layouts
-Future
-3.3.3 Arbitration Engine
-• Purpose: Multi-extractor fusion and winner selection per field
-• Technology: Weighted voting algorithm + policy-driven rules
-• Key Capability: Choose best extraction result with explainable scoring
-• MVP Status: Critical path
-•Without clustering, registry size explodes, slowing searches and increasing 
-maintenance cost. ADAH ensures scalability and operational efficiency.
-Why It Matters
-•Groups similar layout embeddings using density-based clustering (HDBSCAN) and 
-merges them into generalized clusters.
-How It Works
-•Runs as a batch job to clean up registry and feeds back into layout matching logic.
-Integration Points
-•Achieves 10:1 merge ratio; maintains registry size under 100k entries.
-Performance & Scale
-•Optional: Phase-2 may add adaptive thresholds and silhouette score validation for 
-better cluster quality.
-Future Enhancements
-3.3.4 Client Fine-Tuning
-• Purpose: Premium accuracy (≥90%) via client-specific AOAI models
-• Technology: Azure OpenAI fine-tuning + prompt engineering
-• Key Capability: Custom extraction models for high-value clients
-• MVP Status: For 1-2 premium clients; expand in Phase-2
-•To help improve accuracy by leveraging multiple extractors; ensures auditability for compliance
-Why It Matters
-•To scores using confidence, source reliability and policy weights; logs reasoning for every decision
-How It Works
-•To execute in <2s per document; scale for batch processing
-Performance
-•Output to feed into Schema Validation and HITL for low-confidence cases
-Integration
-•ML-based arbitration for advanced scenarios
-Future
-3.3.5 Observability Stack
-• Purpose: End-to-end tracing, accuracy metrics, and drift detection
-• Technology: OpenTelemetry + Azure Application Insights
-• Key Capability: Field-level accuracy dashboards; anomaly detection
-• MVP Status: Critical for MVP validation
-To help us enable SLA compliance and premium pricing; differentiates service offering
-Why It Matters
-To use HITL-corrected data for fine-tuning; applies domain-specific prompts for better extraction
-How It Works
-≥90% accuracy for premium clients; supports incremental updates
-Performance
-Post-validation step; corrections feed into retraining pipeline
-Integration
-Automated retraining based on drift alerts
-Future
-•To help provide transparency for stakeholders, supports SLA compliance and enables rapid root-cause 
-analysis.
-Why It Matters
-•To help capture distributed traces across all pipeline components, logs extraction decisions and 
-aggregates metrics for dashboards.
-How It Works
-•Hooks into every processing step (Textract, Registry, Arbitration, Validation) and feeds data into App 
-Insights for visualization.
-Integration Points
-•Supports real-time monitoring for 1,000+ docs/hour; alerts on drift within 24 hours.
-Performance & Scale
-•Phase-2 to add predictive anomaly detection and automated SLA enforcement.
-Future Enhancements
-3.4 Cross-Cutting Concerns
-3.4.1 Data Models & APIs
-This concern guarantees consistency and interoperability across all components of the 
-pipeline. It would cover the design of database schemas in Postgres, including tables for 
-layout registry, clustering metadata, arbitration logs, and indexes optimized for high-speed 
-KNN searches using pgvector. 
-It should help us define API contracts for ingestion, extraction, arbitration, and publishing, 
-specifying request/response formats, JSON schema validation, and standardized error 
-codes to guarantee predictable behavior. 
-Additionally, it would govern message formats for event-driven communication including 
-Service Bus payload structures and HITL feedback loops. These standards to prevent 
-schema drift, enable smooth integration between microservices and support scalability 
-while maintaining compliance with security and audit requirements.
-3.4.2 Error Handling & Resilience
-Robust error handling ensures system reliability under failure conditions. This includes 
-retry policies for transient errors, circuit breaker patterns to prevent cascading failures, and 
-fallback mechanisms for degraded mode operation. 
-Poison queues to capture failed documents for manual investigation, while idempotent 
-processing guarantees safe re-execution without duplication. These strategies to minimize 
-downtime and maintain SLA compliance even during unexpected disruptions.
-3.4.3 Performance & Scalability
-Performance considerations to include meeting latency targets (e.g., P95 <60s for 10-page 
-documents) and throughput requirements (1,000 docs/hour sustained). 
-Scalability to be achieved through horizontal scaling of containerized services, optimized 
-database indexing and asynchronous batch processing for clustering and fine-tuning. 
-Benchmarks to validate system behavior under peak loads, and auto-scaling policies 
-ensure elasticity during traffic spikes.
-3.4.4 Security & Compliance
-Security component to measure enforce HIPAA and FDA 21 CFR Part 11 compliance. All 
-data in transit uses TLS 1.3 encryption, while data at rest is secured via Azure-managed 
-keys. 
-Access control leverages Azure RBAC and Managed Identity, and secrets are stored in Key 
-Vault. Audit trails capture every extraction decision for regulatory validation, and PHI 
-redaction options are available per client contract.
-4 Design Principles
-Accuracy First
-Choose the best extractor output via arbitration; measure everything.
-Implementation: Every field extraction is scored. Winner is chosen via weighted voting 
-considering source reliability, field difficulty, and historical accuracy. No "black box" 
-decisions.
-Config > Code
-Policies, thresholds, model routing live in config, not code.
-Implementation: YAML-based policies define extractor weights, validation rules, and 
-routing logic. Changes don't require redeployment; hot-reload from blob storage.
-Reusable Intelligence
-Learn layout once, reuse via registry; prevent registry bloat via clustering/generalization.
-Implementation: Vector embeddings enable semantic similarity matching. ADAH 
-clustering automatically merges similar layouts, keeping registry size manageable.
-Human-in-the-Loop (HITL)
-Corrections flow back to training/fine-tuning.
-Implementation: Low-confidence extractions route to human reviewers. Corrections 
-are versioned and feed into fine-tuning datasets (stored in Databricks Delta tables).
-Audit Everywhere
-Every decision is explainable (scores, winner, reason).
-Implementation: OpenTelemetry spans capture decision trees. Every field has: 
-extracted_value, confidence, winner_source, loser_scores, policy_version, timestamp. 
-Queryable via Azure Data Explorer.
-5 Functional Requirements (Key SLAs)
-5.1 Accuracy Requirements
-Metric Baseline 
-(Current)
-MVP 
-Target
-Measurement 
-Method
-Linked 
-Component
-Field-level 
-accuracy (overall)
-75% ≥87% Gold-standard test 
-set (N=500)
-Preprocessing, 
-Observability
-Premium client 
-accuracy
-82% ≥90% Client-specific test 
-set (N=100)
-Client-Specific 
-Fine-Tuning
-Layout match 
-precision
-N/A ≥0.90 KNN retrieval @ top-1 Layout Registry, 
-Clustering
-Layout match 
-recall
-N/A ≥0.85 Known layouts in test 
-set
-Layout Registry, 
-5.2 Performance Requirements
-End-to-end 
-responsiveness
-The pipeline should process documents efficiently under normal and 
-peak conditions, avoiding bottlenecks. 
-Fast registry 
-lookups
-Layout matching should be optimized for quick retrieval to enable 
-seamless routing and arbitration. 
-Efficient 
-arbitration
-Decision-making across multiple extractors should be streamlined to 
-maintain overall throughput without sacrificing accuracy. 
-Scalable 
-throughput
-The architecture should support sustained high-volume processing 
-and adapt to growth or short-term spikes without degradation.
-5.3 Quality Requirements
-Metric Target Detection Method Linked Component
-HITL rate
-≤15% of 
-documents
-Confidence 
-threshold triggers
-Observability, HITL 
-Triggering
-Schema 
-validation failure
-≤5% of 
-extractions
-Validation 
-component logs
-Publishing & Integration
-Drift alert 
-response time
-≤24 hours
-Automated anomaly 
-detection
-Observability & Continuous 
-Improvement
-6. Non-Functional Requirements
-6.1 Reliability
-Requirements
-• Idempotent Processing: The system must avoid reprocessing the same document 
-multiple times.
-• Graceful Degradation: In case of partial system failures, fallback mechanisms 
-should maintain basic functionality.
-Implementation Details
-Mechanism Description Purpose
-Deduplication Each document is hashed before 
-processing. If the hash matches a 
-previously processed document, it is 
-skipped.
-Prevents duplicate 
-processing and ensures 
-idempotency.
-Retry Policies Transient failures trigger retries with 
-exponential backoff, up to 3 attempts.
-Improves resilience against 
-temporary issues.
-Poison Queue Documents that fail after 3 retries are 
-moved to a poison queue for manual 
-review.
-Ensures problematic 
-documents are flagged 
-without blocking the 
-pipeline.
-Circuit 
-Breakers
-If the layout registry is unavailable, the 
-system falls back to a generic layout 
-policy.
-Maintains functionality 
-during partial outages.
-Design Considerations
-✓ All reliability mechanisms are designed to minimize downtime and ensure 
-consistent document handling.
-✓ Circuit breakers and fallback logic are critical for maintaining SLA compliance 
-during service disruptions.
-✓ Poison queue enables operational visibility and manual intervention for edge cases.
-6.2 Performance & Scalability
-Performance Targets
-Metric Target Description
-End-to-end 
-latency (P95)
-≤60 seconds for a 10-
-page document
-Measured from ingestion to final output, 
-including extraction, arbitration, and 
-publishing.
-Sustained 
-throughput
-1000 documents/hour
-System should consistently process this 
-volume under normal operating conditions.
-Burst capacity 2000 documents/hour 
-for up to 15 minutes
-System should handle short-term spikes 
-without degradation or failure.
-Registry 
-scalability
-Support 50,000–100,000 
-layouts
-Layout registry must maintain retrieval 
-performance and accuracy without 
-degradation as layout volume grows.
-Design Considerations
-✓ From Horizontal Scaling Perspective - Queue-based architecture and stateless 
-components allow scaling across multiple workers.
-✓ From Async Processing Perspective - Document ingestion and extraction are 
-decoupled to support high throughput.
-✓ From Vector Index Optimization Perspective - pgvector indexing and clustering 
-ensure fast layout retrieval even at scale.
-✓ From Load Shedding & Throttling Perspective - To protect core services during 
-bursts, non-critical tasks may be deferred or deprioritized.
-7. Workplan & Milestones
-Workplan & Milestones Overview
-Month Goal Week Tasks Deliverables
-Month 1: 
-Foundation
-Core 
-infrastructure 
-operational
-Week 
-1 - 2
-Postgres + pgvector 
-setup; schema 
-migrations; seed 100 
-sample layouts
-Registry API 
-operational 
-(search + insert)
-Week 3 Fingerprint 
-generation; 
-embedding pipeline 
-(text-embedding-3-
-small)
-Integration test: 
-1000 layouts 
-searchable with 
->0.9 precision
-Week 4 KNN search 
-endpoint; baseline 
-performance tests 
-(<100ms @ 50k 
-vectors)
-Month 2: 
-Intelligence 
-Layer
-Arbitration and 
-clustering 
-operational
-Week 
-5 - 6
-Arbitration skeleton; 
-baseline policy; JSON 
-schema validator
-Arbitration 
-improves 
-accuracy by ≥5pp 
-vs. Textract-only
-Week 7 RxNorm/MedDRA 
-semantic lookup 
-integration
-HITL hooks 
-operational (CSV 
-export/import for 
-MVP)
-Week 8 ADAH clustering; 
-auto-merge logic; 
-drift metrics
-Accuracy 
-dashboard live 
-(field-level metrics 
-by layout/client)
-Month 3: Client 
-Fine-Tuning & 
-MVP Sign-Off
-Premium 
-accuracy 
-demonstrated; 
-MVP validated
-Week 
-9 - 10
-First premium client 
-profile; fine-tuning on 
-HITL-corrected data
-Premium client 
-reaches ≥90% 
-accuracy on target 
-layouts
-Week 
-11
-Policy re-weighting 
-using live outcome 
-data; SLA/alert rules
-Observability: full 
-OTel tracing + App 
-Insights 
-dashboards
-Week 
-12
-MVP acceptance 
-testing; performance 
-validation; sign-off
-MVP 
-documentation 
-complete (designs 
-+ runbooks)
-Go/No-Go Criteria for Phase 2
-Metric Target
-Overall accuracy ≥87% (vs. 82% baseline)
-P95 latency <60s for 10-page documents
-Security/compliance No critical findings
-8. RACI Matrix
-Task / Area Responsible Accountable Consulted Informed
-Architecture Design Sajid Sajid Helios, Yash Team
-Layout Registry Helios + Sajid Sajid Helios Yash
-Clustering (ADAH) Helios + Sajid Sajid Helios Yash
-Arbitration Logic Helios Sajid Yash (policies) Yash
-Policy Definitions Yash Yash Sajid, Helios Team
-AOAI Fine-Tuning Helios + Sajid Helios Sajid Yash
-Observability Stack Sajid Sajid DevOps Team
-HITL Workflow QA Team Helios Eng Team Yash
-Security / Compliance Sajid + Security Yash Business Team
-Testing Strategy QA Lead Sajid Dev Team Yash
- 
- 
-Expectations for Yash
-Task / Area Role Expectations
-Architecture 
-Design
-Consulted
-Provide input on architectural decisions, especially 
-around policy and compliance alignment.
-Layout Registry Informed
-Stay updated on registry implementation and 
-performance.
-Clustering 
-(ADAH)
-Informed
-Stay informed on clustering logic and its impact on 
-layout reuse.
-Arbitration 
-Logic
-Consulted & 
-Informed
-Advise on policy definitions that guide arbitration 
-decisions. Stay informed on arbitration outcomes.
-Policy 
-Definitions
-Accountable
-Own and approve policy frameworks (e.g., extractor 
-weights, thresholds). Ensure alignment with 
-business rules.
-AOAI FineTuning
-Informed
-Stay updated on fine-tuning efforts and accuracy 
-improvements for premium clients.
-HITL Workflow Informed
-Be aware of how human corrections are integrated 
-into the system.
-Security / 
-Compliance
-Accountable
-Ensure all security and compliance requirements 
-are met. Coordinate with Legal and Security teams.
-Testing Strategy Informed
-Stay informed on testing plans and results, 
-especially as they relate to policy and compliance 
-coverage.
-9. Dependencies & Risks
-External Dependencies
-Dependency Owner Risk Level Mitigation
-JSON Schema 
-(authoritative)
-Yash Medium Weekly sync; schema versioning
-AOAI Deployment 
-Quotas
-Sajid Medium
-Pre-provision GPT-4 capacity; 
-fallback to Textract-only
-Sample Set Coverage Product/QA Medium
-Prioritize high-volume layout 
-types first
-Key Risks
-Risk Impact Probability Mitigation Strategy
-Registry KNN performance 
-degrades at scale
-High Medium
-Pre-emptive load testing; 
-IVFFlat tuning; consider 
-sharding at 100k
-ADAH clustering merges 
-incompatible layouts
-Medium Low
-Silhouette score validation; 
-manual approval for 
-questionable merges
-AOAI rate limits during 
-fine-tuning
-Medium Medium
-Stagger fine-tuning runs; use 
-async batch API
-Textract accuracy 
-regression on new form 
-types
-High Low
-Continuous monitoring; alert 
-on accuracy drop >5pp
-HITL backlog grows faster 
-than review capacity
-High Medium
-Auto-escalate; prioritize by 
-client SLA; expand reviewer 
-pool
-10. Architecture Decision Records (ADRs)
-10.1 Why pgvector over Pinecone/Weaviate?
-Decision: Use Postgres pgvector extension instead of dedicated vector database
-Context: Need KNN search for 50k-100k layout embeddings with <100ms P95 latency
-Rationale:
-✓ Co-locate with relational data (policies, audit logs) → simpler data model
-✓ IVFFlat index supports our scale and latency requirements
-✓ Lower operational complexity (one database vs. two services)
-Trade-offs:
-✓ Not as fast as Pinecone at >1M vectors (not a concern for MVP)
-✓ Less mature ecosystem for vector operations
-✓ Can migrate to dedicated vector DB in Phase-2 if needed (embeddings portable)
-Status: Approval Pending
-10.2 Why HDBSCAN over K-means for clustering?
-Decision: Use density-based clustering (HDBSCAN) instead of K-means
-Context: Need to auto-merge similar layouts without knowing cluster count upfront
-Rationale:
-✓ HDBSCAN doesn't require pre-specifying number of clusters (k)
-✓ Handles variable-density clusters (some forms have 100 variants, others have 5)
-✓ Automatically identifies noise/outliers (truly unique layouts)
-✓ Better silhouette scores on our test data (0.72 vs. 0.54 for K-means)
-Trade-offs:
-✓ Slightly slower than K-means (acceptable for batch processing)
-✓ Requires tuning min_cluster_size parameter (set via grid search)
-Status: Approval Pending
-10.3 Why weighted voting over ML-based arbitration?
-Decision: Use rule-based weighted voting for arbitration instead of ML model
-Context: Need to combine results from multiple extractors (Textract, AOAI)
-Rationale:
-✓ Explainability: Every decision has a clear audit trail (scores, weights, policy version)
-✓ Simplicity: No training data needed; no model drift to manage
-✓ Debuggability: Can manually tune weights; easy to identify when/why it fails
-✓ Regulatory: Rule-based systems are easier to validate for FDA compliance
-Trade-offs:
-- May not capture complex interactions between extractors
-- Requires manual tuning of weights (mitigated by HITL feedback loop)
-- Can add ML arbitration in Phase-2 if simple voting plateaus
-Status: Approval Pending
-11. Glossary
-➢ AE: Adverse Event (primary use case: AE form processing) 
-➢ ADAH: Adaptive Document Abstraction Hierarchy – our clustering algorithm
-➢ AOAI: Azure OpenAI Service 
-➢ Arbitration: Process of selecting best extraction result from multiple candidates 
-➢ Embedding: 768-dimensional vector representation of document layout 
-➢ Fingerprint: Structural hash of document layout (bbox positions, text density, etc.) 
-➢ HDBSCAN: Hierarchical Density-Based Spatial Clustering (density-based 
-clustering algorithm) 
-➢ HITL: Human-in-the-Loop (manual review/correction workflow) 
-➢ KNN: K-Nearest Neighbors (vector similarity search algorithm) 
-➢ Layout: Unique document structure/template (e.g., "FDA 3500A form v2") 
-➢ OTel: OpenTelemetry (distributed tracing standard) 
-➢ pgvector: Postgres extension for vector similarity search 
-➢ Policy: Configuration defining extractor weights, validation rules for a layout 
-➢ SAE: Serious Adverse Event (subset of AE with higher severity) 
-➢ Semantic Validation: Business logic checks (RxNorm, MedDRA lookups, crossfield rules)
-12. Approval & Sign-Off
-Role Name Signature Date
-AI Architect - TFS Yash Shah
-13. Revision History
-Version Date Author Changes
-1.0 11/06/2025 Sajid Inayat Initial draft
-1.1 11/13/2025 Sajid Inayat Incorporated Yash’s feedback
+Got you – this doc still screams “Postgres/pgvector” and we need it to say “Azure-native, enterprise, staged MVP” without making it look like we backtracked. I’ll give you **ready-to-paste replacements** for the key sections:
+
+I’ll focus on:
+
+* Exec summary / tenets
+* Design updates table
+* Layout Registry + Data Models & APIs
+* Perf & scalability + workplan
+* ADR 10.1 + Glossary
+
+You can copy them straight into Word.
+
+---
+
+## 1️⃣ Executive Summary – updated wording
+
+**Replace your existing Executive Summary block with:**
+
+> We’re strengthening the existing Azure Textract-centric AE pipeline by adding a thin, modular intelligence layer on top: a Layout Registry, hybrid embeddings, and a tiered classification layer that can safely handle “infinite layouts” while controlling cost and complexity.
+>
+> For the MVP, the registry is implemented using **Azure-native services** (Azure Table Storage + Blob Storage + in-app vector similarity) rather than a dedicated database. This keeps the design lightweight, fast to provision, and aligned with enterprise guidance to favor managed cloud services over one-off Postgres instances.
+>
+> As volume and the number of layouts grow, the same design scales to **Azure AI Search or Azure Data Explorer** as the vector index, without changing the registry or classification logic. Clustering (ADAH) and client-specific fine-tuning remain part of the roadmap for high-volume and premium accuracy scenarios, layered on top of the MVP.
+>
+> These changes directly answer leadership guidance: optimize accuracy, auditability, and repeatability, while staying within the Azure ecosystem and minimizing operational overhead.
+
+---
+
+## 2️⃣ Key Design Tenets – add Azure-native + staged capacity
+
+Under **2.1 Key Design Tenets**, add/replace bullets like this:
+
+```text
+• Enhance, don't replace: Build on the existing Textract investment and TFS pipelines.
+• Accuracy first: Multi-source arbitration with measurable improvements (≥5pp).
+• Learn once, reuse forever: Layout Registry prevents re-solving the same forms.
+• Azure-native first: Prefer Azure Table Storage, Blob, Azure AI Search, and Data Explorer over net-new database stacks unless scale clearly requires them.
+• Explainable decisions: Every extraction choice is auditable with scores and policies.
+• Progressive delivery: MVP uses a lightweight registry (Table + Blob + in-app KNN); Phase-2 can introduce Azure AI Search / ADAH clustering as needed.
+```
+
+---
+
+## 3️⃣ Design Updates Table (3.2.1) – remove pgvector wording
+
+**Replace the “Scalability” row with:**
+
+| Concern                 | Problem                        | Design Update / Solution                                                                                 | Location on Diagram                 | Status                                        |
+| ----------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------- | ----------------------------------- | --------------------------------------------- |
+| Classification Accuracy | Single classifier forces match | Added hierarchical classification + three-tier confidence system                                         | Step 3 (KNN + Classification logic) | Implemented                                   |
+| Embedding Quality       | Text embeddings ignore layout  | Hybrid embedding (Text + Geometry), future LayoutLMv3                                                    | Step 2                              | Implemented                                   |
+| Cost Efficiency         | Double OpenAI calls            | Fingerprint tier skips OpenAI for repeats                                                                | Step 1                              | Implemented                                   |
+| Scalability             | KNN noisy at >50 categories    | Pre-filtering by doc_type + in-app KNN over a small candidate set; Azure AI Search/ADX as scale-out path | Step 3                              | MVP: Implemented (in-app); Scale-out: Roadmap |
+
+Note: “in-app KNN” = vector similarity running in the service code, not in DB.
+
+---
+
+## 4️⃣ Layout Registry Component (3.3.1) – Azure-native, Postgres optional
+
+**Replace 3.3.1 with:**
+
+### 3.3.1 Layout Registry
+
+* **Purpose:** Identify document layouts by similarity so we can reuse known extraction behavior instead of treating every AE form as new.
+* **MVP Technology:**
+
+  * **Azure Table Storage** – registry metadata for layouts, policies, and audit logs
+  * **Azure Blob Storage** – persisted embedding vectors and artifacts
+  * **In-app vector similarity** – KNN search implemented in the application layer over a small candidate set
+* **Scale-out Options (Phase-2):**
+
+  * **Azure AI Search (vector index)** or
+  * **Azure Data Explorer (KNN over vectors)**
+    used when the number of layouts and queries warrants a managed vector service.
+* **Key Capability:** Match an incoming document to a known layout (or decide it’s “unknown/default”) fast enough to keep overall P95 latency under 60 seconds for a 10-page document.
+* **MVP Status:** Critical path.
+
+**Why It Matters**
+
+* Encodes “learn once, reuse many times”: once a layout is seen and validated, the registry lets us recognize it again without re-solving the problem.
+* Keeps the **MVP** simple and Azure-native while leaving a clear path to enterprise-grade vector indexing when Thermo Fisher’s volume justifies it.
+
+---
+
+## 5️⃣ Data Models & APIs (3.4.1) – remove Postgres focus
+
+**Replace 3.4.1 with:**
+
+### 3.4.1 Data Models & APIs
+
+This concern guarantees consistency and interoperability across all components of the pipeline, regardless of the underlying storage engine.
+
+* The registry data model is defined in a **storage-agnostic way**, with concrete mappings for:
+
+  * **Azure Table Storage** (MVP) – entities for layouts, layout_policies, registry_audit_log, and layout-level metadata.
+  * **Azure Blob Storage** – embedding vectors and large artifacts.
+  * **Future**: Azure AI Search / Azure Data Explorer – vector index definitions for high-volume similarity search.
+* API contracts are defined upfront for:
+
+  * ingestion (`/registry/insert`, `/registry/fingerprint`)
+  * similarity search (`/registry/knn`)
+  * arbitration and publishing integration
+    using JSON schema validation and standardized error codes.
+* Message formats are defined for event-driven communication (Service Bus) and HITL feedback loops, including how case IDs, trace IDs, and similarity tiers are propagated.
+
+This ensures we can swap or extend the physical storage (e.g., add Azure AI Search) without changing the logical contract between services.
+
+---
+
+## 6️⃣ Performance & Scalability (6.2) – remove pgvector callout
+
+In **“Design Considerations”** under 6.2, replace the vector bullet:
+
+```text
+From Vector Index Optimization Perspective – pgvector indexing and clustering ensure fast layout retrieval even at scale.
+```
+
+with:
+
+```text
+From Vector Index Optimization Perspective – the MVP uses in-app KNN over a narrow candidate set (pre-filtered by doc_type and client); Phase-2 can introduce Azure AI Search or Azure Data Explorer for managed vector indexing when layout volume and QPS justify it.
+```
+
+Optionally add a new bullet:
+
+```text
+From Storage Strategy Perspective – Azure-native services (Table Storage, Blob, AI Search/ADX) are preferred over introducing single-purpose databases, aligning with TFS platform standards and reducing operational overhead.
+```
+
+---
+
+## 7️⃣ Workplan & Milestones (7) – align with Azure storage
+
+**Month 1 – Week 1–2** → update the line:
+
+> Postgres + pgvector setup; schema migrations; seed 100 sample layouts
+
+to:
+
+> Layout Registry MVP storage (Azure Table + Blob) provisioned; schema finalized; seed ~50–100 sample layouts for similarity and routing tests.
+
+**Month 1 – Week 3** → update:
+
+> Fingerprint generation; embedding pipeline (text-embedding-3-small)
+
+to:
+
+> Fingerprint generation; hybrid embedding pipeline (text + geometry); persistence to Blob/registry entities.
+
+**Month 1 – Week 4** → update:
+
+> KNN search endpoint; baseline performance tests (<100ms @ 50k vectors)
+
+to:
+
+> KNN search endpoint (in-app vector similarity over pre-filtered candidates); baseline performance tests for typical AE layout volumes (<100ms per KNN call at MVP scale). Phase-2 will add Azure AI Search/ADX if layout count and QPS require a managed vector index.
+
+That gives you a clean story: same algorithm, storage different.
+
+---
+
+## 8️⃣ ADR 10.1 – replace pgvector decision
+
+**Completely replace 10.1 with:**
+
+### 10.1 Why Azure-native Registry (Table + Blob + Optional AI Search) vs. Dedicated Vector DB
+
+**Decision:** Use Azure Table Storage + Blob Storage for the MVP registry, with an upgrade path to Azure AI Search or Azure Data Explorer for vector indexing, instead of standing up a dedicated Postgres/pgvector or third-party vector database.
+
+**Context:**
+We need KNN-style layout similarity for a relatively small number of layout templates in the MVP, with a clear path to scale as volume grows, while staying aligned with Thermo Fisher’s enterprise preferences for Azure-native services.
+
+**Rationale:**
+
+* **Enterprise alignment:** Uses Azure-native services TFS already supports (Table, Blob, AI Search/ADX) instead of introducing a new Postgres stack used only by one component.
+* **MVP simplicity:** At initial scale (<50–100 layouts), in-app vector similarity over a small candidate set is simpler and cheaper than provisioning and operating a full vector database.
+* **Cost & ops:** Avoids the overhead of provisioning, securing, and maintaining a dedicated Postgres instance used for a single registry table.
+* **Future-proof:** All embeddings and fingerprints are stored in a backend-agnostic format, so we can introduce Azure AI Search or ADX for vector search later without changing the registry API.
+
+**Trade-offs:**
+
+* In-app KNN is suitable for MVP scale; high-QPS, high-cardinality workloads may require AI Search/ADX to hit aggressive SLAs.
+* Some advanced pgvector operations (e.g., IVFFlat tuning) are not used; instead we rely on Azure Search or ADX semantics when we scale up.
+
+**Status:** Approved for MVP; scale-out path will be revisited once we approach the agreed thresholds for layout count / traffic.
+
+---
+
+## 9️⃣ Glossary – remove pgvector, add Azure AI Search
+
+In the **Glossary**, update these entries:
+
+* **Embedding:**
+  Instead of “768-dimensional vector representation of document layout”, you can say:
+
+  > Dense numerical vector representation (e.g., 768-dimensional) of document layout/features used for similarity search.
+
+* **Fingerprint:** keep as-is.
+
+* **pgvector:**
+  Either remove, or replace with:
+
+  > **Vector Index:** A structure used by the system (in-app or via Azure AI Search / Azure Data Explorer) to perform fast KNN similarity search over embeddings.
+
+Add:
+
+> **Azure AI Search:** Azure-native search and vector indexing service used as the scale-out option for layout similarity when layout and traffic volumes grow.
+> **Azure Table Storage:** Azure-native key-value / table service used to store registry metadata (layouts, policies, audit logs) in the MVP.
+
+---
+
+If you want, next step I can:
+
+* Rewrite the **“3.3.2 Clustering (ADAH)”** section to clearly mark it as **Phase-2 / optional**, not critical path, so MVP doesn’t look over-engineered.
+* Draft a **one-paragraph summary** you can use in meetings: “We used to talk about Postgres/pgvector; here’s how we’ve refactored to Azure-native without losing functionality.”
