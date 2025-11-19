@@ -1,44 +1,12 @@
-Position Audit: Current Status, Implementation RoadMap & Deliverable
-
-Current Status
-	•	Proposal submitted and architecture defined (Azure-based AI pipeline).
-	•	Awaiting Thermo Fisher’s sandbox / dataset access to initiate Model A (Azure Document Intelligence) setup.
-	•	Target start: once credentials, sample PDFs, and schema definitions are shared.
-
-
-IMPLEMENTATION ROADMAP
-Sprint 1-2 (Weeks 1-4): Foundation
-• Set up Azure infrastructure
-• Implement SharePoint → Blob Storage sync
-• Basic document classification
-• Simple extraction with Form Recognizer
-Deliverable: Documents automatically flow from SharePoint to Blob Storage and basic extraction works
-
-Sprint 3-4 (Weeks 5-8): Model A Enhancement
-• Train custom Form Recognizer models for AE/SAE forms
-• Implement NLP for narrative text
-• Add checkbox/selection detection
-• Build confidence scoring logic
-Deliverable: Accurate extraction of all key fields from AE/SAE documents
-
-Sprint 5-6 (Weeks 9-12): Model B Implementation
-• Build normalization service
-• Implement medical coding integration (MedDRA)
-• Create data quality checks
-• Develop routing logic
-Deliverable: Normalized, validated data ready for downstream systems
-
-Sprint 7-8 (Weeks 13-16): Schema Service & Integration
-• Build Central Schema Service
-• Create validation engine
-• Implement manual review queue
-• Build reporting dashboard
-Deliverable: End-to-end pipeline with quality gates
-
-Sprint 9-10 (Weeks 17-20): Testing & Optimization
-• Load testing
-• Accuracy tuning
-• Performance optimization
-• User acceptance testing
-Deliverable: Production-ready system
-
+ID	Epic	Story Title	Description	Assignee	Story Points	Complexity	Status	Dependencies
+1.3	Architecture & Design	Define Layout Registry Data Model (Azure Table + Blob)	Define Azure-native schema for registry using Table Storage + Blob. Includes ERD for layouts, embeddings, policies, audit log.	Sajid	3	M	Not Started	None
+1.4	Architecture & Design	Define Tiered Classification Rules	Document Tier 1/2/3 thresholds, DEFAULT fallback, consensus rules.	Sajid	3	M	Not Started	None
+1.5	Architecture & Design	Define HITL Workflow	Define reviewers, triggers, corrections, promote-to-registry flow.	Sajid	2	S	Not Started	None
+2.1	Infra	Provision Azure Table Storage	Infra creates a Table Storage account for registry metadata.	TFS Infra Team	2	S	Not Started	None
+2.2	Infra	Provision Azure Blob Storage	Infra creates a Blob container for embeddings + artifacts.	TFS Infra Team	2	S	Not Started	None
+2.3	Infra	Optional: Azure AI Search / ADX	Scale path for Phase-2 vector indexing.	TFS Infra Team	5	L	Future	None
+3.1	Registry	Fingerprinting Engine (Azure Blob + Table)	SHA-256 fingerprinting; store fingerprints in Table; raw artifacts in Blob.	Helios	3	M	Not Started	1.3
+3.2	Registry	Skip-on-Repeat Fast Path	If fingerprint exists, bypass full extraction + mark SKIPPED.	Helios	3	M	Not Started	3.1
+3.3	Registry	Registry Storage Integration (Azure Table + Blob)	Implement CRUD logic for registry tables + blob-based embeddings.	Helios	3	M	Not Started	1.3
+3.4	Registry	In-App KNN Similarity Engine	Compute cosine similarity in code; no DB index required for MVP.	Helios	3	M	Not Started	1.3
+4.1	Embeddings	Hybrid Embedding Pipeline (Blob Storage)	Generate vectors and store them in Blob; link in Table Storage.	Helios	3	M	Not Started	None
