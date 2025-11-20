@@ -1,0 +1,182 @@
+Got it — I’ll describe exactly what to draw so you can rebuild the ERD 1:1 in draw.io / Visio, since my file export just failed.
+
+Use this as your **blueprint**.
+
+---
+
+## Canvas setup
+
+* Orientation: **Landscape**
+* Size: Any, but think in a 3-column layout
+* Entities: 4 tables
+
+  * `layouts`
+  * `layout_embeddings`
+  * `layout_policies`
+  * `registry_audit_log`
+
+Use a **“table / entity”** style shape (swimlane or rectangle with header).
+
+---
+
+## Entity 1 – `layouts` (center-left)
+
+**Position**
+
+* X ≈ 200, Y ≈ 250
+* Width ≈ 260, Height ≈ 190
+
+**Shape**
+
+* Rounded rectangle or swimlane
+* Header background: light grey
+* Header text: **layouts**
+
+**Inside text (top → bottom)**
+
+```text
+PK  layout_id (string / GUID)
+    client_id (string)
+    layout_name (string)
+    version (int)
+    source_hash (string)
+    fingerprint_hash (string)
+    layout_type (enum: AE_FORM, LAB_REPORT, ...)
+    status (enum: active, deprecated)
+    created_at (datetime)
+    updated_at (datetime)
+    is_active (bool)
+```
+
+(You can bold the PK line if your tool supports it.)
+
+---
+
+## Entity 2 – `layout_embeddings` (top-center)
+
+**Position**
+
+* X ≈ 720, Y ≈ 80
+* Width ≈ 260, Height ≈ 170
+
+**Header**
+
+* Text: **layout_embeddings**
+
+**Inside text**
+
+```text
+PK  embedding_id (string / GUID)
+FK  layout_id → layouts.layout_id
+    embedding_vector (array<float> or JSON)
+    model_name (string)
+    model_version (string)
+    embedding_dim (int)
+    created_at (datetime)
+```
+
+---
+
+## Entity 3 – `layout_policies` (center-right, lower)
+
+**Position**
+
+* X ≈ 720, Y ≈ 400
+* Width ≈ 260, Height ≈ 190
+
+**Header**
+
+* Text: **layout_policies**
+
+**Inside text**
+
+```text
+PK  policy_id (string / GUID)
+FK  layout_id → layouts.layout_id
+    policy_version (int)
+    policy_json (JSON / string)
+    is_default (bool)
+    effective_from (datetime)
+    effective_to (datetime, nullable)
+    created_at (datetime)
+    updated_at (datetime)
+```
+
+---
+
+## Entity 4 – `registry_audit_log` (far right, centered vertically)
+
+**Position**
+
+* X ≈ 1240, Y ≈ 250
+* Width ≈ 280, Height ≈ 210
+
+**Header**
+
+* Text: **registry_audit_log**
+
+**Inside text**
+
+```text
+PK  audit_id (string / GUID)
+    doc_id (string)
+FK  layout_id → layouts.layout_id (nullable)
+    action (enum: matched, defaulted, promoted, skipped)
+    similarity_score (float, nullable)
+    tier (enum: T1, T2, T3)
+    fingerprint_hash (string)
+    trace_id (string)
+    reason (string / text)
+    created_at (datetime)
+    created_by (string)
+```
+
+---
+
+## Relationships (arrows / connectors)
+
+Use **straight or orthogonal connectors with arrowheads**. Optional: add cardinalities.
+
+1. **layouts → layout_embeddings**
+
+   * From: right side center of `layouts`
+   * To: left side center of `layout_embeddings`
+   * Label near center: `1 ── *`
+   * Meaning: one layout can have many embeddings (model versions, retrains).
+
+2. **layouts → layout_policies**
+
+   * From: right side lower of `layouts`
+   * To: left side center of `layout_policies`
+   * Label: `1 ── *`
+   * Meaning: one layout can have many policies over time.
+
+3. **layouts → registry_audit_log**
+
+   * From: top of `registry_audit_log` left edge
+   * To: right side of `layouts`
+   * Label: `1 ── * (nullable)`
+   * Meaning: many audit rows may reference a layout; for unknown layouts this FK may be null.
+
+---
+
+## Optional styling (to make it really clear)
+
+* Color code:
+
+  * `layouts`: **light blue** (primary entity)
+  * `layout_embeddings`: **light green**
+  * `layout_policies`: **light orange**
+  * `registry_audit_log`: **light purple**
+* Put a small note box at the bottom:
+
+```text
+Note:
+- Physical storage may be Azure Table + Blob.
+- This diagram is logical / relational (storage-agnostic).
+- Vector math is handled in the app layer; embedding_vector can be stored as JSON or binary.
+```
+
+---
+
+If you want, next I can give you **exact draw.io steps** (which shape to pick, font size, etc.) so you can literally click-by-click rebuild it.
