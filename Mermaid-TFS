@@ -1,0 +1,66 @@
+flowchart TD
+    %% Styling Definitions
+    classDef source fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+    classDef adapter fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
+    classDef message fill:#ffe0b2,stroke:#f57c00,stroke-width:2px;
+    classDef orchestrate fill:#e1bee7,stroke:#8e24aa,stroke-width:2px;
+    classDef store fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px;
+    classDef monitor fill:#f5f5f5,stroke:#616161,stroke-dasharray: 5 5;
+
+    subgraph Monitoring [Cross-Cutting Observability]
+        CW[CloudWatch Logs & Metrics]:::monitor
+        XR[AWS X-Ray Tracing]:::monitor
+    end
+
+    subgraph Layer1 [1. Source Systems]
+        S1[PowerApps]:::source
+        S2[SharePoint]:::source
+        S3[Dataverse]:::source
+        S4[Power Automate]:::source
+    end
+
+    subgraph Layer2 [2. Integration Layer Adapters]
+        direction TB
+        L1(Lambda: PowerApps Adapter):::adapter
+        L2(Lambda: SharePoint Adapter):::adapter
+        L3(Lambda: Dataverse Adapter):::adapter
+        L4(Lambda: Auto/Runbook Adapter):::adapter
+        Note2[Convert to Standard Protocol JSON]:::adapter
+    end
+
+    subgraph Layer3 [3. Messaging Backbone]
+        SNS{AWS SNS Topic<br>Publish Events}:::message
+        SQS[(AWS SQS Queue<br>Command Buffer)]:::message
+        DLQ[(Dead Letter Queue)]:::message
+    end
+
+    subgraph Layer4 [4. Orchestration]
+        SF[[AWS Step Functions]]:::orchestrate
+        Retry(Retry Logic):::orchestrate
+        Fan(Fan-Out / Parallel):::orchestrate
+        State(State Tracking):::orchestrate
+    end
+
+    subgraph Layer5 [5. Analytics & Storage]
+        DB[(Databricks on AWS<br>Delta Lake)]:::store
+        S3[S3 Raw Storage]:::store
+        Bronze[Bronze]:::store
+        Silver[Silver]:::store
+        Gold[Gold]:::store
+    end
+
+    %% Data Flow Connections
+    S1 & S2 & S3 & S4 -->|Trigger| Layer2
+    L1 & L2 & L3 & L4 -->|Publish Protocol JSON| SNS
+    SNS -->|Subscribe| SQS
+    SQS -->|Trigger Batch| SF
+    SQS -.->|Fail| DLQ
+    SF -->|Orchestrate| DB
+    SF -->|Archive| S3
+    
+    %% Internal Storage Flow
+    DB --- Bronze --> Silver --> Gold
+
+    %% Monitoring Connections
+    Layer2 -.-> CW
+    Layer4 -.-> CW & XR
